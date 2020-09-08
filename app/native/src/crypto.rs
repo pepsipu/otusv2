@@ -1,6 +1,7 @@
 use crypto::digest::Digest;
 use crypto::sha2::Sha256;
 use std::fmt::{Debug, Display, Formatter};
+use neon::prelude::*;
 
 pub struct Crypto {
     sha256: Sha256,
@@ -42,3 +43,4 @@ impl Debug for Crypto {
         Ok(())
     }
 }
+
