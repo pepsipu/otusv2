@@ -1,1 +1,0 @@
-const addon = require('../native');
