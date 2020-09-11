@@ -1,6 +1,6 @@
 use crypto::bcrypt::bcrypt;
 
-const BCRYPT_COST: u32 = 1;
+const BCRYPT_COST: u32 = 6;
 /* TODO: maybe generate a salt for each image?
 for now, using this will just prevent usage of preexisting tables so it's ok */
 const BCRYPT_SALT: &[u8] = b"otus_salt1234567";
