@@ -29,20 +29,21 @@ declare_types! {
             /* we can't really interact with wrapped js values very easily so map them to something
             we can work with */
             let js_checks: Vec<Handle<JsValue>> = cx.argument::<JsArray>(0)?.to_vec(&mut cx)?;
-            let mut checks: Vec<Check> = Vec::with_capacity(js_checks.len());
+            let mut sys_watcher = SystemWatcher::new(Vec::with_capacity(js_checks.len()));
             /* can't map/match because we might need to raise err. this is ugly. i hate it. why the
             FUCK do i need keep everything in the same scope to throw an error??? someone please
             figure out how to do this properly because i have no clue. */
-            for check in js_checks {
-                let js_check = check.downcast_or_throw::<JsObject, CallContext<JsUndefined>>(&mut cx)?;
+            for check_obj in js_checks {
+                let js_check = check_obj.downcast_or_throw::<JsObject, CallContext<JsUndefined>>(&mut cx)?;
                 let check_res = Check::make_check(&mut cx, &js_check);
-                if let Ok(c) = check_res {
-                    checks.push(c);
+                if let Ok(check) = check_res {
+                    check.maybe_cache_file(&mut sys_watcher.fm);
+                    sys_watcher.checks.push(check);
                 } else if let Err(e) = check_res {
                     return Err(e);
                 }
             }
-            Ok(SystemWatcher::new(checks))
+            Ok(sys_watcher)
         }
     }
 }

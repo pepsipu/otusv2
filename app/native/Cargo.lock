@@ -103,6 +103,7 @@ dependencies = [
 name = "otus_client"
 version = "0.1.0"
 dependencies = [
+ "lazy_static",
  "neon",
  "neon-build",
  "rust-crypto",
