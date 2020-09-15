@@ -6,20 +6,16 @@ use crate::vuln::Check;
 use crate::bindings::js_helper::property;
 
 pub struct SystemWatcher {
-    fm: FileManager,
-    checks: Vec<Check>
+    pub fm: FileManager,
+    pub checks: Vec<Check>
 }
 
 impl SystemWatcher {
-    fn new(checks: Vec<Check>) -> SystemWatcher {
+    pub fn new(checks: Vec<Check>) -> SystemWatcher {
         SystemWatcher {
             checks,
             fm: FileManager::new(),
         }
-    }
-
-    fn cache_files(&mut self) {
-
     }
 }
 
@@ -44,6 +40,15 @@ declare_types! {
                 }
             }
             Ok(sys_watcher)
+        }
+
+        method runChecks(mut cx) {
+            {
+                let this = cx.this();
+                let guard = cx.lock();
+                let checks: &Vec<Check> = &this.borrow(&guard).checks;
+            }
+            Ok(cx.string("epic").upcast())
         }
     }
 }

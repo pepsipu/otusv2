@@ -4,14 +4,15 @@ use std::fs::File;
 use std::io::{BufReader, Read, Result};
 
 #[derive(Debug)]
-struct FileHash {
+struct FileData {
     hashes: HashMap<usize, Vec<crypto::Ripemd160Hash>>,
     file_hash: crypto::Sha256Hash,
+    file: Vec<u8>,
 }
 
 #[derive(Debug)]
 pub struct FileManager {
-    file_cache: HashMap<String, FileHash>,
+    file_cache: HashMap<String, FileData>,
 }
 
 impl FileManager {
@@ -21,15 +22,16 @@ impl FileManager {
         }
     }
 
-    pub fn cache_file(&mut self, file_name: String, length: usize) -> Result<()> {
-        let file_buf = std::fs::read(&file_name)?;
-        let mut file_hashes = FileHash {
+    pub fn cache_file(&mut self, file_name: &String, length: usize) -> Result<()> {
+        let file_buf = std::fs::read(file_name)?;
+        let mut file_data = FileData {
             hashes: HashMap::new(),
             file_hash: crypto::sha256_hash(&*file_buf),
+            file: file_buf,
         };
-        let hashes = crypto::compute_hashes(&*file_buf, length);
-        file_hashes.hashes.insert(length, hashes);
-        self.file_cache.insert(file_name, file_hashes);
+        let hashes = crypto::compute_hashes(&file_data.file, length);
+        file_data.hashes.insert(length, hashes);
+        self.file_cache.insert(file_name.clone(), file_data);
         Ok(())
     }
 
@@ -52,5 +54,9 @@ impl FileManager {
     pub fn file_contains(&mut self, file_name: &str, hash: &[u8], l: usize) -> Option<usize> {
         let file = self.file_cache.get(file_name).unwrap();
         crypto::contains(file.hashes.get(&l).unwrap(), hash)
+    }
+
+    pub fn plain_at_idx(&self,  file: &String, idx: usize, length: usize) -> Vec<u8> {
+        self.file_cache.get(file).unwrap().file[idx..idx + length].to_vec()
     }
 }

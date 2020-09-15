@@ -1,17 +1,18 @@
-
 use neon::prelude::*;
+use neon::*;
+use crate::bindings::system_watcher::JsSystemWatcher;
+use crate::fs::FileManager;
+use crate::vuln::Check;
+use std::borrow::Borrow;
 
 mod bindings;
 mod crypto;
 mod fs;
 mod vuln;
 
-fn test(mut cx: FunctionContext) -> JsResult<JsString> {
-    Ok(cx.string("gaming"))
-}
+/* unfortunately types need to be declared in lib.rs or you can't use some stuff */
 
-register_module!(mut cx, {
-    cx.export_function("test", test);
-    cx.export_class::<bindings::system_watcher::JsSystemWatcher>("SystemWatcher")?;
-    Ok(())
-});
+
+register_module!(mut m, { m.export_class::<JsSystemWatcher>("SystemWatcher") });
+
+// register_module!(mut m, { m.export_class::<JsSystemWatcher>("SystemWatcher") });

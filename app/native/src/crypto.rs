@@ -3,6 +3,9 @@ use crypto::sha2::Sha256;
 use crypto::ripemd160::Ripemd160;
 use crypto::digest::Digest;
 use std::sync::{Mutex, Arc};
+use crypto::aes_gcm::AesGcm;
+use crypto::aes::KeySize::KeySize256;
+use crypto::aead::AeadDecryptor;
 
 /* TODO: maybe generate a salt for each image?
 for now, using this will just prevent usage of preexisting tables so it's ok */
@@ -10,6 +13,8 @@ const RIPEMD160_SALT: &[u8] = b"otus_salt!";
 
 pub type Ripemd160Hash = [u8; 20];
 pub type Sha256Hash = [u8; 32];
+pub type AesNonce = [u8; 12];
+pub type AesTag = [u8; 16];
 
 /* js is async! to prevent input/res race conditions we will need to use a mutex for our
 sha256/ripemd160 singletons. wrap in arc so we can have atomic operations for reference counting
@@ -27,7 +32,8 @@ lazy_static! {
 pub fn ripemd160_hash(s: &[u8]) -> Ripemd160Hash {
     /* allocing memory to concat the input and salt is expensive. keep a stack buffer as a
     tiny optimization to prevent needing to use heap. we can always fall back to heap if our stack
-    buffer is too tiny. a little premature optimizationish imo, but does save use some time. */
+    buffer is too tiny. a little premature optimizationish imo, but does save us some time. if
+    someone can find a better solution (maybe use a smallvec?) that would be great. */
     let mut salted_buffer: [u8; 512] = [0; 512];
     let mut res: Ripemd160Hash = [0; 20];
     let mut ripemd160 = RIPEMD160.lock().unwrap();
@@ -48,7 +54,7 @@ pub fn ripemd160_hash(s: &[u8]) -> Ripemd160Hash {
 }
 
 /* sha256 is used when we really don't care much about security/when an alternative is needed to
-ripemd160. */
+ripemd160. try to use ripemd160 when you can. */
 pub fn sha256_hash(s: &[u8]) -> Sha256Hash {
     let mut res: Sha256Hash = [0; 32];
     let mut sha256 = SHA256.lock().unwrap();
@@ -71,4 +77,11 @@ pub fn compute_hashes(s: &[u8], l: usize) -> Vec<Ripemd160Hash> {
         hashes.push(ripemd160_hash(&s[i..i + l]));
     }
     hashes
+}
+
+pub fn aes_decrypt(cipher_text: &Vec<u8>, key: &[u8; 32], nonce: &AesNonce, tag: &AesTag) -> Vec<u8> {
+    let mut plain_text = Vec::with_capacity(cipher_text.len());
+    let mut aes_gcm = AesGcm::new(KeySize256, key, nonce, &[]);
+    aes_gcm.decrypt(cipher_text, &mut *plain_text, tag);
+    return plain_text;
 }

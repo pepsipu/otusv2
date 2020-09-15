@@ -1,9 +1,11 @@
-use crate::crypto::Ripemd160Hash;
+use crate::crypto::{Ripemd160Hash, Sha256Hash, sha256_hash, AesNonce, AesTag};
 use neon::prelude::*;
+use neon::*;
 use crate::bindings::js_helper::{property, byte_arr_property};
 use std::convert::TryFrom;
 use neon::result::Throw;
 use crate::fs::FileManager;
+use neon::macro_internal::runtime::nan::array::len;
 
 pub struct Check {
     /* points need to be signed for negative checks (introducing vulnerabilities not preexisting
@@ -24,13 +26,20 @@ pub enum CheckType {
     First, what information should we store about V? We should ensure the information stored does
     not allow V to be found, but when combined with S, is a lot easier to find. I opted for storing
     a hash of V and the length of V, meaning that bruteforcing V would require (assuming printable
-    ascii) 95^len(V) hashes to compute. i use bcrypt for hashing, since that will amplify the
-    gap between the linear and exponential models.
+    ascii) 95^len(V) hashes to compute.
 
     the message field is the report message for passing the check, encrypted with aes-gcm using the
-    sha256 hash of the plaintext of the bcrypt hash as the key. once the engine finds the plaintext
-    of the bcrypt hash, it can use it to decrypt the message. */
-    FileContains { file: String, hash: Ripemd160Hash, length: usize, message: Vec<u8> },
+    sha256(ripemd160's plaintext + ripemd160). this would mean bruteforcing the key would require
+    two hashes to compute, one of which is salted, meaning the overall effect is a secure salted
+    sha256 hash. */
+    FileContains {
+        file: String,
+        hash: Ripemd160Hash,
+        length: usize,
+        message: Vec<u8>,
+        nonce: AesNonce,
+        tag: AesTag,
+    },
     /*
     Secure File Does Not Contain: Check if a file does not contain a string without knowing the
     string.
@@ -55,20 +64,40 @@ pub enum CheckType {
     not adding a field to FileContains to signify not because this is subject to change and i dont
     feel like refactoring code when i need to redo the algorithm
     */
-    FileNotContain { file: String, hash: Ripemd160Hash, length: usize, message: Vec<u8> }
+    FileNotContain {
+        file: String,
+        hash: Ripemd160Hash,
+        length: usize,
+        message: Vec<u8>,
+        nonce: AesNonce,
+        tag: AesTag,
+    },
 }
 
 impl Check {
-    pub fn is_passed(&self) -> bool {
+    /* if we pass a check, we can decode a message. attach the option to return a vec containing
+    the message */
+    pub fn is_passed<T>(&self, fm: &mut FileManager) -> (bool, Option<Vec<u8>>) {
         match &self.check_type {
-            CheckType::FileContains { .. } => {
+            CheckType::FileContains { file, length, hash, message, .. } => {
+                /* the cache might be updated if changes are made */
+                fm.update_cached_file(file, *length);
+                if let Some(idx) = fm.file_contains(file, hash, *length) {
+                    /* to decode the message, we must calculate sha256(plain + ripemd16(plain + salt)).*/
+                    let mut plaintext = fm.plain_at_idx(file, idx, *length);
+                    plaintext.extend_from_slice(hash);
+                    let key = sha256_hash(&*plaintext);
 
+                    (false, None)
+                } else {
+                    (false, None)
+                }
             },
             CheckType::FileNotContain { .. } => {
-
-            }
+                (false, None)
+            },
+            _ => (false, None)
         }
-        true
     }
 
     pub fn get_type<'a>(type_name: &str, cx: &mut CallContext<JsUndefined>, value: &Handle<JsObject>) -> NeonResult<CheckType> {
@@ -78,14 +107,24 @@ impl Check {
                 /* because we have a string slice but we need to it be a constant size array so
                 we need to try into a 20 byte array. ensure hash slice is exactly 20 bytes. */
                 if hash_vec.len() != 20 {
-                    return cx.throw_error("hash for file_contains needs to be 20 bytes.")
+                    return cx.throw_error("hash for file_contains needs to be 20 bytes.");
+                }
+                let nonce = &*byte_arr_property(cx, value, "nonce")?;
+                if nonce.len() != 12 {
+                    return cx.throw_error("nonce for file_contains needs to be 12 bytes.");
+                }
+                let tag = &*byte_arr_property(cx, value, "tag")?;
+                if tag.len() != 16 {
+                    return cx.throw_error("tag for file_contains needs to be 16 bytes.");
                 }
                 Ok(CheckType::FileContains {
                     file: property::<JsString>(cx, value, "file")?.value(),
                     /* safely unwrap because length is guaranteed to be 20 */
                     hash: <Ripemd160Hash>::try_from(hash_vec).unwrap(),
                     length: property::<JsNumber>(cx, value, "length")?.value() as usize,
-                    message: byte_arr_property(cx, value, "message")?
+                    message: byte_arr_property(cx, value, "message")?,
+                    nonce: <AesNonce>::try_from(nonce).unwrap(),
+                    tag: <AesTag>::try_from(tag).unwrap(),
                 })
             },
             _ => Err(Throw)
@@ -104,7 +143,7 @@ impl Check {
         match &self.check_type {
             CheckType::FileContains { file, length, .. } |
             CheckType::FileNotContain { file, length, .. } => {
-                fm.cache_file(file.clone(),  *length);
+                fm.cache_file(file, *length);
                 true
             },
             _ => false,
