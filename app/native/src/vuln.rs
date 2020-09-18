@@ -1,4 +1,4 @@
-use crate::crypto::{Ripemd160Hash, Sha256Hash, sha256_hash, AesNonce, AesTag};
+use crate::crypto::{Ripemd160Hash, Sha256Hash, sha256_hash, AesNonce, AesTag, aes_decrypt, ripemd160_hash};
 use neon::prelude::*;
 use neon::*;
 use crate::bindings::js_helper::{property, byte_arr_property};
@@ -29,9 +29,9 @@ pub enum CheckType {
     ascii) 95^len(V) hashes to compute.
 
     the message field is the report message for passing the check, encrypted with aes-gcm using the
-    sha256(ripemd160's plaintext + ripemd160). this would mean bruteforcing the key would require
-    two hashes to compute, one of which is salted, meaning the overall effect is a secure salted
-    sha256 hash. */
+    sha256(ripemd160(sha256(plaintext))). computing sha256 is the difficult part, since it requires
+    knowing the plaintext. to prevent bruteforcing, ripemd160, our salted algorithm, will hash this
+    hash. finally, to create a key of AES size, we hash the ripemd160 result with sha256. */
     FileContains {
         file: String,
         hash: Ripemd160Hash,
@@ -77,18 +77,18 @@ pub enum CheckType {
 impl Check {
     /* if we pass a check, we can decode a message. attach the option to return a vec containing
     the message */
-    pub fn is_passed<T>(&self, fm: &mut FileManager) -> (bool, Option<Vec<u8>>) {
+    pub fn is_passed(&self, fm: &mut FileManager) -> (bool, Option<Vec<u8>>) {
         match &self.check_type {
-            CheckType::FileContains { file, length, hash, message, .. } => {
+            CheckType::FileContains { file, length, hash, message, nonce, tag, .. } => {
                 /* the cache might be updated if changes are made */
-                fm.update_cached_file(file, *length);
-                if let Some(idx) = fm.file_contains(file, hash, *length) {
-                    /* to decode the message, we must calculate sha256(plain + ripemd16(plain + salt)).*/
-                    let mut plaintext = fm.plain_at_idx(file, idx, *length);
-                    plaintext.extend_from_slice(hash);
-                    let key = sha256_hash(&*plaintext);
 
-                    (false, None)
+                fm.update_cached_file(file, *length).unwrap();
+                if let Some(idx) = fm.file_contains(file, hash, *length) {
+                    /* to decode the message, we must calculate sha256(ripemd160(sha256(plaintext))).*/
+                    let mut plaintext = fm.plain_at_idx(file, idx, *length);
+                    let key = sha256_hash(&ripemd160_hash(&sha256_hash(&*plaintext)));
+                    let decrypted_message = aes_decrypt(message, &key, nonce, tag);
+                    (true, Some(decrypted_message))
                 } else {
                     (false, None)
                 }
@@ -143,7 +143,7 @@ impl Check {
         match &self.check_type {
             CheckType::FileContains { file, length, .. } |
             CheckType::FileNotContain { file, length, .. } => {
-                fm.cache_file(file, *length);
+                fm.cache_file(file, *length).unwrap();
                 true
             },
             _ => false,

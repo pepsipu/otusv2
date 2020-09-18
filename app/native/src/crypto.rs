@@ -5,10 +5,12 @@ use crypto::digest::Digest;
 use std::sync::{Mutex, Arc};
 use crypto::aes_gcm::AesGcm;
 use crypto::aes::KeySize::KeySize256;
-use crypto::aead::AeadDecryptor;
+use crypto::aead::{AeadDecryptor, AeadEncryptor};
+use rand::{Rng, RngCore};
 
 /* TODO: maybe generate a salt for each image?
-for now, using this will just prevent usage of preexisting tables so it's ok */
+for now, using this will just prevent usage of preexisting tables so it's ok. maybe we could even
+have a per vuln and per client nonce for extra security? */
 const RIPEMD160_SALT: &[u8] = b"otus_salt!";
 
 pub type Ripemd160Hash = [u8; 20];
@@ -80,8 +82,28 @@ pub fn compute_hashes(s: &[u8], l: usize) -> Vec<Ripemd160Hash> {
 }
 
 pub fn aes_decrypt(cipher_text: &Vec<u8>, key: &[u8; 32], nonce: &AesNonce, tag: &AesTag) -> Vec<u8> {
-    let mut plain_text = Vec::with_capacity(cipher_text.len());
+    let mut plain_text = vec![0; cipher_text.len()];
     let mut aes_gcm = AesGcm::new(KeySize256, key, nonce, &[]);
     aes_gcm.decrypt(cipher_text, &mut *plain_text, tag);
     return plain_text;
+}
+
+/* this isnt really needed except for client side testing */
+pub fn aes_encrypt(plain_text: &Vec<u8>, key: &[u8; 32]) -> (Vec<u8>, AesTag, AesNonce) {
+    let mut cipher_text: Vec<u8> = vec![0; plain_text.len()];
+    /* DOES IT LOOK LIKE I GIVE A GOD DAMN FUCK i aint no piss baby
+    unsafe is ok here because contents are not used so no uninitialized + it is reserved.
+    if ur a piss baby you can initialize ciphertext for O(n) memset speed sacrifice
+
+    update: i am a piss baby and im scared of uninitialized data so will leave the unsafe code
+    commented until i regain my confidence */
+    /* let mut cipher_text: Vec<u8> = Vec::with_capacity(plain_text.len());
+    unsafe { cipher_text.set_len(plain_text.len()) }; */
+    let mut nonce: AesNonce = [0; 12];
+    let mut tag: AesTag = [0; 16];
+    /* kind of insecure but doesn't matter for security purposes */
+    rand::thread_rng().fill_bytes(&mut nonce);
+    let mut aes_gcm = AesGcm::new(KeySize256, key, &nonce, &[]);
+    aes_gcm.encrypt(plain_text, &mut cipher_text, &mut tag);
+    (cipher_text, tag, nonce)
 }

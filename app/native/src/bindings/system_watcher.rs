@@ -4,6 +4,7 @@ use neon::*;
 use crate::fs::FileManager;
 use crate::vuln::Check;
 use crate::bindings::js_helper::property;
+use std::fs::File;
 
 pub struct SystemWatcher {
     pub fm: FileManager,
@@ -44,9 +45,19 @@ declare_types! {
 
         method runChecks(mut cx) {
             {
-                let this = cx.this();
+                let mut this = cx.this();
                 let guard = cx.lock();
-                let checks: &Vec<Check> = &this.borrow(&guard).checks;
+                let mut sys_watcher = this.borrow_mut(&guard);
+                let checks: &Vec<Check> = &sys_watcher.checks;
+                // let mut fm: &FileManager = &mut sys_watcher.fm;
+                for check in checks {
+                    // let (passed, message) = check.is_passed(&mut sys_watcher.fm);
+                    // if passed {
+                    //     match message {
+                    //         _ => ()
+                    //     }
+                    // }
+                }
             }
             Ok(cx.string("epic").upcast())
         }

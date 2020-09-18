@@ -37,10 +37,10 @@ impl FileManager {
 
     /* we should check against the file hash to make sure we aren't rehashing an unchanged file
     TODO: rehash after changed point and if change is a multiple of length, just rehash segment */
-    pub fn update_cached_file(&mut self, file_name: &str, length: usize) -> Result<bool> {
+    pub fn update_cached_file(&mut self, file_name: &String, length: usize) -> Result<bool> {
         let file_buf = std::fs::read(file_name)?;
         let mut cache = self.file_cache.get_mut(file_name).unwrap();
-        let new_cache_hash = crypto::sha256_hash(&*file_buf);
+        let new_cache_hash = crypto::sha256_hash(&file_buf);
         if new_cache_hash == cache.file_hash {
             /* no changes were made to the file, don't update cache */
             return Ok(false);
