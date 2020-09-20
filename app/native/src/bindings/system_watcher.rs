@@ -6,6 +6,7 @@ use crate::vuln::Check;
 use crate::bindings::js_helper::property;
 use std::fs::File;
 
+#[derive(Clone)]
 pub struct SystemWatcher {
     pub fm: FileManager,
     pub checks: Vec<Check>
@@ -44,22 +45,33 @@ declare_types! {
         }
 
         method runChecks(mut cx) {
-            {
+            /* although i dont want to, we cant keep the guard in scope without borrowing it as
+            immutable. as a result, we need to copy all of the system watcher over, make our
+            changes, and copy it back.
+            TODO: use refs to system watcher instead of copy back and forth without getting
+             assaulted by the borrow checker
+            rust gurus, this is your job. */
+            let mut sys_watcher: SystemWatcher = {
                 let mut this = cx.this();
                 let guard = cx.lock();
                 let mut sys_watcher = this.borrow_mut(&guard);
-                let checks: &Vec<Check> = &sys_watcher.checks;
-                // let mut fm: &FileManager = &mut sys_watcher.fm;
-                for check in checks {
-                    // let (passed, message) = check.is_passed(&mut sys_watcher.fm);
-                    // if passed {
-                    //     match message {
-                    //         _ => ()
-                    //     }
-                    // }
+                sys_watcher.clone()
+            };
+            /* the check array isn't necessarily this length. it's just the maximum possible
+            length */
+            let ret = JsArray::new(&mut cx, sys_watcher.checks.len() as u32);
+            let checks_passed: u32 = 0;
+            for check in sys_watcher.checks {
+                let (passed, message, pow) = check.is_passed(&mut sys_watcher.fm);
+                if passed {
+                    /* [points, message, pow]. objects in neon are slowwww so we will use arrays
+                    for now*/
+                    let element = JsArray::new(&mut cx, 3);
+                    let points = cx.number(check.points as f64);
+                    element.set(&mut cx, 0, points);
                 }
             }
-            Ok(cx.string("epic").upcast())
+            Ok(ret.upcast())
         }
     }
 }

@@ -1,12 +1,13 @@
 use crate::crypto::{Ripemd160Hash, Sha256Hash, sha256_hash, AesNonce, AesTag, aes_decrypt, ripemd160_hash};
 use neon::prelude::*;
 use neon::*;
-use crate::bindings::js_helper::{property, byte_arr_property};
+use crate::bindings::js_helper::{property, base64_str_prop};
 use std::convert::TryFrom;
 use neon::result::Throw;
 use crate::fs::FileManager;
 use neon::macro_internal::runtime::nan::array::len;
 
+#[derive(Clone)]
 pub struct Check {
     /* points need to be signed for negative checks (introducing vulnerabilities not preexisting
     on the system) */
@@ -14,6 +15,7 @@ pub struct Check {
     pub check_type: CheckType
 }
 
+#[derive(Clone)]
 pub enum CheckType {
     /* Secure File Contains: Check if a file contains a string without knowing the string.
 
@@ -75,45 +77,44 @@ pub enum CheckType {
 }
 
 impl Check {
-    /* if we pass a check, we can decode a message. attach the option to return a vec containing
-    the message */
-    pub fn is_passed(&self, fm: &mut FileManager) -> (bool, Option<Vec<u8>>) {
+    /* if we pass a check, we can decode a message. return if we passed it, the message, and the
+    proof of work. */
+    pub fn is_passed(&self, fm: &mut FileManager) -> (bool, Vec<u8>, Sha256Hash) {
         match &self.check_type {
             CheckType::FileContains { file, length, hash, message, nonce, tag, .. } => {
                 /* the cache might be updated if changes are made */
-
                 fm.update_cached_file(file, *length).unwrap();
                 if let Some(idx) = fm.file_contains(file, hash, *length) {
                     /* to decode the message, we must calculate sha256(ripemd160(sha256(plaintext))).*/
-                    let mut plaintext = fm.plain_at_idx(file, idx, *length);
+                    let plaintext = fm.plain_at_idx(file, idx, *length);
                     let key = sha256_hash(&ripemd160_hash(&sha256_hash(&*plaintext)));
                     let decrypted_message = aes_decrypt(message, &key, nonce, tag);
-                    (true, Some(decrypted_message))
+                    (true, decrypted_message, key)
                 } else {
-                    (false, None)
+                    (false, vec![], [0; 32])
                 }
             },
             CheckType::FileNotContain { .. } => {
-                (false, None)
+                (false, vec![], [0; 32])
             },
-            _ => (false, None)
+            // _ => (false, vec![], [0; 32])
         }
     }
 
     pub fn get_type<'a>(type_name: &str, cx: &mut CallContext<JsUndefined>, value: &Handle<JsObject>) -> NeonResult<CheckType> {
         match type_name {
             "file_contains" => {
-                let hash_vec = &*byte_arr_property(cx, value, "hash")?;
+                let hash_vec = &*base64_str_prop(cx, value, "hash")?;
                 /* because we have a string slice but we need to it be a constant size array so
                 we need to try into a 20 byte array. ensure hash slice is exactly 20 bytes. */
                 if hash_vec.len() != 20 {
                     return cx.throw_error("hash for file_contains needs to be 20 bytes.");
                 }
-                let nonce = &*byte_arr_property(cx, value, "nonce")?;
+                let nonce = &*base64_str_prop(cx, value, "nonce")?;
                 if nonce.len() != 12 {
                     return cx.throw_error("nonce for file_contains needs to be 12 bytes.");
                 }
-                let tag = &*byte_arr_property(cx, value, "tag")?;
+                let tag = &*base64_str_prop(cx, value, "tag")?;
                 if tag.len() != 16 {
                     return cx.throw_error("tag for file_contains needs to be 16 bytes.");
                 }
@@ -122,12 +123,12 @@ impl Check {
                     /* safely unwrap because length is guaranteed to be 20 */
                     hash: <Ripemd160Hash>::try_from(hash_vec).unwrap(),
                     length: property::<JsNumber>(cx, value, "length")?.value() as usize,
-                    message: byte_arr_property(cx, value, "message")?,
+                    message: base64_str_prop(cx, value, "message")?,
                     nonce: <AesNonce>::try_from(nonce).unwrap(),
                     tag: <AesTag>::try_from(tag).unwrap(),
                 })
             },
-            _ => Err(Throw)
+            _ => cx.throw_error(format!("{} is not a valid vuln type", type_name))
         }
     }
 
@@ -146,7 +147,7 @@ impl Check {
                 fm.cache_file(file, *length).unwrap();
                 true
             },
-            _ => false,
+            // _ => false,
         }
     }
 }
