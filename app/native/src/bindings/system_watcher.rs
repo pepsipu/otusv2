@@ -52,25 +52,35 @@ declare_types! {
              assaulted by the borrow checker
             rust gurus, this is your job. */
             let mut sys_watcher: SystemWatcher = {
-                let mut this = cx.this();
+                let this = cx.this();
                 let guard = cx.lock();
-                let mut sys_watcher = this.borrow_mut(&guard);
+                let sys_watcher = this.borrow(&guard);
                 sys_watcher.clone()
             };
-            /* the check array isn't necessarily this length. it's just the maximum possible
-            length */
             let ret = JsArray::new(&mut cx, sys_watcher.checks.len() as u32);
-            let checks_passed: u32 = 0;
-            for check in sys_watcher.checks {
+            for (i, check) in (&sys_watcher.checks).iter().enumerate() {
                 let (passed, message, pow) = check.is_passed(&mut sys_watcher.fm);
+                let element = JsArray::new(&mut cx, 3);
+                let points = cx.number(check.points as f64);
+                element.set(&mut cx, 0, points);
                 if passed {
                     /* [points, message, pow]. objects in neon are slowwww so we will use arrays
-                    for now*/
-                    let element = JsArray::new(&mut cx, 3);
-                    let points = cx.number(check.points as f64);
-                    element.set(&mut cx, 0, points);
+                    for now */
+                    let js_message = cx.string(message);
+                    element.set(&mut cx, 1, js_message);
+                    let js_pow = cx.string(base64::encode(pow));
+                    element.set(&mut cx, 2, js_pow);
+                } else {
+                    let null = cx.null();
+                    element.set(&mut cx, 1, null);
+                    element.set(&mut cx, 2, null);
                 }
+                ret.set(&mut cx, i as u32, element);
             }
+            let mut this = cx.this();
+            let guard = cx.lock();
+            let mut sys_watcher_store = this.borrow_mut(&guard);
+            sys_watcher_store.clone_from(&sys_watcher);
             Ok(ret.upcast())
         }
     }

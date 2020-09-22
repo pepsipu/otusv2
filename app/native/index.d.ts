@@ -2,18 +2,18 @@ declare namespace otusBind {
   export class SystemWatcher {
     constructor(checks: Check[]);
 
-    runChecks(): void;
+    runChecks(): (string | number)[][];
   }
-  export type Ripemd160Hash = readonly number[] & { length: 20 };
-  export type AesTag = readonly number[] & { length: 16 };
-  export type AesNonce = readonly number[] & { length: 12 };
+  export type Ripemd160Hash = string;
+  export type AesTag = string;
+  export type AesNonce = string;
   export interface Check {
     type: string,
     points: number,
     file?: string,
     hash?: Ripemd160Hash,
     length?: number,
-    message?: number[],
+    message?: string,
     tag?: AesTag,
     nonce?: AesNonce,
   }

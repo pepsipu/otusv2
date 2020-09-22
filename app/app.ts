@@ -4,11 +4,11 @@ import otusBind from './native';
 const x = new otusBind.SystemWatcher([{
   type: 'file_contains',
   points: 20,
-  hash: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] as const,
+  hash: 'QUFBQUFBQUFBQUFBQUFBQUFBQUE=',
   length: 5,
-  message: [1, 2, 3, 4],
+  message: 'QUFBQUFBQUFBQUFBQUFBQQ==',
   file: '/etc/passwd',
-  nonce: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] as const,
-  tag: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] as const,
+  nonce: 'QUFBQUFBQUFBQUFB',
+  tag: 'QUFBQUFBQUFBQUFBQUFBQQ==',
 }]);
 console.log(x.runChecks());

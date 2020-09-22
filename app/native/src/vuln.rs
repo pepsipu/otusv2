@@ -5,7 +5,6 @@ use crate::bindings::js_helper::{property, base64_str_prop};
 use std::convert::TryFrom;
 use neon::result::Throw;
 use crate::fs::FileManager;
-use neon::macro_internal::runtime::nan::array::len;
 
 #[derive(Clone)]
 pub struct Check {
@@ -79,7 +78,7 @@ pub enum CheckType {
 impl Check {
     /* if we pass a check, we can decode a message. return if we passed it, the message, and the
     proof of work. */
-    pub fn is_passed(&self, fm: &mut FileManager) -> (bool, Vec<u8>, Sha256Hash) {
+    pub fn is_passed(&self, fm: &mut FileManager) -> (bool, String, Sha256Hash) {
         match &self.check_type {
             CheckType::FileContains { file, length, hash, message, nonce, tag, .. } => {
                 /* the cache might be updated if changes are made */
@@ -89,13 +88,14 @@ impl Check {
                     let plaintext = fm.plain_at_idx(file, idx, *length);
                     let key = sha256_hash(&ripemd160_hash(&sha256_hash(&*plaintext)));
                     let decrypted_message = aes_decrypt(message, &key, nonce, tag);
-                    (true, decrypted_message, key)
+                    let message_str = String::from_utf8(decrypted_message).unwrap();
+                    (true, message_str, key)
                 } else {
-                    (false, vec![], [0; 32])
+                    (false, String::new(), [0; 32])
                 }
             },
             CheckType::FileNotContain { .. } => {
-                (false, vec![], [0; 32])
+                (false, String::new(), [0; 32])
             },
             // _ => (false, vec![], [0; 32])
         }

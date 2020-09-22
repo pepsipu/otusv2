@@ -3,14 +3,14 @@ use std::collections::HashMap;
 use std::fs::File;
 use std::io::{BufReader, Read, Result};
 
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 struct FileData {
     hashes: HashMap<usize, Vec<crypto::Ripemd160Hash>>,
     file_hash: crypto::Sha256Hash,
     file: Vec<u8>,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub struct FileManager {
     file_cache: HashMap<String, FileData>,
 }
