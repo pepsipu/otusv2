@@ -1,3 +1,23 @@
 #root {
     height: 100%;
+    width: 100%;
+    background: black;
+    position: absolute;
+}
+
+button {
+    font-family: 'Roboto Mono', monospace;
+    border: none;
+    border-radius: 3px;
+    background: #f05d5e;
+    color: #060e0e;
+    user-select: none;
+}
+
+button:active, input[type="button"]:active {
+    outline: none;
+}
+
+button:focus, input[type="button"]:focus {
+    outline: none;
 }

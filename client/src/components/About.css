@@ -1,8 +1,24 @@
 #background {
     height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    position: absolute;
+
+}
+
+#centerDiv {
+    text-align: center;
+}
+
+* {
+    margin: 0;
 }
 
 html, body {
     height: 100%;
     margin: 0;
+    background: #060e0e;
+    overflow: hidden;
 }
