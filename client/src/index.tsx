@@ -2,12 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import './index.css';
-import About from './components/About';
+import Landing from './components/Landing';
+import Home from './components/Home';
 
 const router = (
   // @ts-ignore
   <Router>
-    <Route path="/" component={About} />
+    <Route exact path="/" component={Landing} />
+    <Route path="/home" component={Home} />
   </Router>
 );
 

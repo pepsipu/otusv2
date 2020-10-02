@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
-import './About.css';
+import './Landing.css';
 import { motion } from 'framer-motion';
-import OtusLogo from '../img/otus_engine.svg';
 
 // vanta pls add typescript typing
 const vantaNet = require('vanta/dist/vanta.net.min').default;
 
 export default () => {
   const [vantaEffect, setVantaEffect] = useState(0);
+
   const vantaRef = useRef(null);
   useEffect(() => {
     if (!vantaEffect) {
@@ -37,7 +37,7 @@ export default () => {
       >
         <motion.div
           animate={{
-            y: '-15vh',
+            y: '-50px',
             scale: 1.5,
           }}
           transition={{ duration: 1, delay: 2, ease: 'easeInOut' }}
@@ -65,7 +65,7 @@ export default () => {
               animate="visible"
               transition={{
                 default: { duration: 3, ease: 'easeInOut' },
-                fill: { duration: 3, ease: [1, 0, 0.8, 1] },
+                fill: { duration: 1.5, ease: [1, 0, 0.8, 1] },
               }}
               style={{
                 overflow: 'visible',
@@ -88,7 +88,7 @@ export default () => {
               initial="hidden"
               animate="visible"
               transition={{
-                fill: { duration: 3, ease: [1, 0, 0.8, 1] },
+                fill: { duration: 1.5, ease: [1, 0, 0.8, 1] },
                 default: { duration: 3, ease: 'easeInOut' },
               }}
               style={{
@@ -114,6 +114,9 @@ export default () => {
               width: '200px',
               height: '60px',
               fontSize: '12pt',
+            }}
+            onClick={() => {
+              window.location.href = `${window.location.origin}/home`;
             }}
           >
             start hacking »

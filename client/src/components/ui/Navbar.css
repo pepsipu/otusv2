@@ -1,0 +1,19 @@
+.navBar {
+    width: 100%;
+    height: 40px;
+    padding: 10px;
+    background: #060e0e;
+}
+
+.navBar:after {
+    content: '';
+    display: inline-block;
+    width: 0px;
+    height: 100%;
+    vertical-align: middle;
+}
+
+.navBar > * {
+    display: inline-block;
+    vertical-align: middle;
+}
