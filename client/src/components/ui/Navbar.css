@@ -1,19 +1,13 @@
 .navBar {
-    width: 100%;
     height: 40px;
-    padding: 10px;
-    background: #060e0e;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-bottom: 1px solid #2f2e2e;
+    color: #101010;
 }
 
-.navBar:after {
-    content: '';
-    display: inline-block;
-    width: 0px;
+.navElement {
+    align-items: center;
+    display: flex;
     height: 100%;
-    vertical-align: middle;
-}
-
-.navBar > * {
-    display: inline-block;
-    vertical-align: middle;
 }

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './Landing.css';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 // vanta pls add typescript typing
 const vantaNet = require('vanta/dist/vanta.net.min').default;
@@ -23,7 +24,7 @@ export default () => {
         spacing: 17,
         points: 9,
         color: 0xf05d5e,
-        backgroundColor: 0x060e0e,
+        backgroundColor: 0x101010,
       }));
     }
   }, [vantaEffect]);
@@ -107,20 +108,19 @@ export default () => {
             opacity: 0,
           }}
         >
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            style={{
-              width: '200px',
-              height: '60px',
-              fontSize: '12pt',
-            }}
-            onClick={() => {
-              window.location.href = `${window.location.origin}/home`;
-            }}
-          >
-            start hacking »
-          </motion.button>
+          <Link to="home">
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              style={{
+                width: '200px',
+                height: '60px',
+                fontSize: '12pt',
+              }}
+            >
+              start hacking »
+            </motion.button>
+          </Link>
         </motion.div>
       </motion.div>
     </div>

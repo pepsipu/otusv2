@@ -1,3 +1,7 @@
 html, body {
-    background: #060e0e;
+    background: #101010;
+}
+
+#root {
+    background: #101010;
 }

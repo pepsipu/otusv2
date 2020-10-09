@@ -1,5 +1,5 @@
 #root {
-    background: #060e0e;
+    background: #101010;
     font-family: 'Roboto Mono', monospace;
 }
 
@@ -8,7 +8,7 @@ button {
     border: none;
     border-radius: 3px;
     background: #f05d5e;
-    color: #060e0e;
+    color: #101010;
     user-select: none;
 }
 

@@ -1,10 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './Navbar.css';
 // import { motion } from 'framer-motion';
-import OtusLogo2 from '../../img/otus_engine_2.svg';
+import { Link } from 'react-router-dom';
 
 export default () => (
-  <div className="navBar">
-    <img src={OtusLogo2} alt="Otus Logo" height="35px" />
+  <div className="navBar row">
+    <div className="col navElement">
+      <Link to="/home" style={{ textDecoration: 'none' }}>Home</Link>
+    </div>
   </div>
 );
