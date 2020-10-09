@@ -6,8 +6,17 @@
     color: #101010;
 }
 
+.navBar > * {
+    color: #f1f2eb;
+}
+
 .navElement {
     align-items: center;
     display: flex;
     height: 100%;
+}
+
+.activeNav {
+    border-bottom: 2px solid #f05d5e;
+    color: #f05d5e;
 }
