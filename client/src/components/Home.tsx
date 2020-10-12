@@ -1,12 +1,11 @@
 import React from 'react';
 import 'bootstrap-4-grid';
+import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import OtusHorizontal from '../img/otus_engine_2.svg';
 
 export default () => (
-  <div style={{
-    display: 'flex', padding: '30px', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', color: '#f1f2eb', textAlign: 'left',
-  }}
-  >
+  <div className="centerField">
     <img width="400px" src={OtusHorizontal} alt="horizontal otus engine logo" />
     <br />
     <div style={{ width: '600px' }}>
@@ -22,7 +21,26 @@ export default () => (
         {' '}
         to play ctf challenges and practice linux cyberpatriot images on.
       </p>
+      <br />
+      <h1>why otus?</h1>
+      <p>
+        otus allows you to make your own challenges and images to share with your friends. you can
+        submit your challenges to be verified and worth points.
+      </p>
     </div>
-
+    <br />
+    <Link to="register">
+      <motion.button
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        style={{
+          width: '200px',
+          height: '45px',
+          fontSize: '12pt',
+        }}
+      >
+        register »
+      </motion.button>
+    </Link>
   </div>
 );

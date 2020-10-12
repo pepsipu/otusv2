@@ -1,6 +1,5 @@
 import React from 'react';
 import './Navbar.css';
-import { motion } from 'framer-motion';
 import { NavLink } from 'react-router-dom';
 
 export default (props: { paths: string[][] }) => {

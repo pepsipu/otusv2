@@ -27,3 +27,25 @@ p {
 a {
     color: #f05d5e;
 }
+
+.centerField {
+    display: flex;
+    padding: 30px;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: #f1f2eb;
+    text-align: left;
+}
+
+input {
+    background: #2f2e2e;
+    color: #f1f2eb;
+    width: 300px;
+    border: solid #2f2e2e;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 5px;
+    font-size: 13pt;
+    font-family: 'Roboto Mono', monospace;
+}
