@@ -4,10 +4,8 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './index.css';
 import Landing from './components/Landing';
 import App from './components/App';
-import NotFound from './components/NotFound';
 
 const router = (
-  // @ts-ignore
   <Router>
     <Switch>
       <Route exact path="/" component={Landing} />

@@ -23,3 +23,7 @@ button:focus, input[type="button"]:focus {
 p {
     color: #f1f2eb;
 }
+
+a {
+    color: #f05d5e;
+}

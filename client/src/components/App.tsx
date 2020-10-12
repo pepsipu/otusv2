@@ -7,15 +7,25 @@ import Home from './Home';
 import Profile from './Profile';
 import NotFound from './NotFound';
 
+const paths = [
+  {
+    name: 'home',
+    path: '/home',
+    component: Home,
+  },
+  {
+    name: 'profile',
+    path: '/profile',
+    component: Profile,
+  },
+];
+
 export default () => (
   <>
-    <Navbar />
-    <Router>
-      <Switch>
-        <Route exact path="/home" component={Home} />
-        <Route exact path="/profile" component={Profile} />
-        <Route component={NotFound} />
-      </Switch>
-    </Router>
+    <Navbar paths={paths.map(({ name, path }) => [name, path])} />
+    <Switch>
+      {paths.map(({ path, component }) => <Route exact path={path} component={component} />)}
+      <Route component={NotFound} />
+    </Switch>
   </>
 );
