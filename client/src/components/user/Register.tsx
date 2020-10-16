@@ -21,7 +21,6 @@ const register = async (email: string, user: string, password: string, captcha: 
     password,
     captcha,
   });
-  console.log(response);
   switch (response.status) {
     case 200:
       return RegisterStatus.Success;

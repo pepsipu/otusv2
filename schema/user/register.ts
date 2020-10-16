@@ -14,3 +14,5 @@ const registerSchema = joi.object({
     .required(),
   captcha: joi.string(),
 });
+
+export default registerSchema;
