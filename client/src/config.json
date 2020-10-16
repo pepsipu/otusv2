@@ -1,3 +1,4 @@
 {
-  "recaptcha": "6LeOYtYZAAAAAJV_ayxNSH6WgcH_XJS3bOHe7aNc"
+  "recaptcha": "6LeOYtYZAAAAAJV_ayxNSH6WgcH_XJS3bOHe7aNc",
+  "apiEndpoint": "http://localhost"
 }

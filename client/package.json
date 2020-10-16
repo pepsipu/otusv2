@@ -12,6 +12,7 @@
     "@types/react-dom": "^16.9.8",
     "@types/react-router": "^5.1.8",
     "@types/react-router-dom": "^5.1.5",
+    "axios": "^0.20.0",
     "bootstrap-4-grid": "^3.4.0",
     "eslint-config-airbnb-typescript": "^7.2.1",
     "framer-motion": "^2.7.5",

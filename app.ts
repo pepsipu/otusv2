@@ -1,6 +1,9 @@
 import express from 'express';
 import chalk from 'chalk';
 import mongoose from 'mongoose';
+import helmet from 'helmet';
+import cors from 'cors';
+import { origin } from './config/config.json';
 
 import './config/env';
 import { expressLogger, logger } from './config/winston';
@@ -10,8 +13,12 @@ const app: express.Application = express();
 const port: number = +(process.env.PORT || 3000);
 const { MONGO_URI } = process.env;
 
+app.use(cors({
+  origin,
+}));
+app.use(helmet());
 app.use(express.json());
-app.use('/api', router);
+app.use('', router);
 app.use(expressLogger);
 
 mongoose.connect(MONGO_URI || '', {

@@ -2,8 +2,7 @@ import express from 'express';
 
 export default {
   routes: [(router: express.Router) => {
-    router.post('users/register', () => {
-
+    router.post('/user/register', (req, res) => {
     });
   }],
 };
