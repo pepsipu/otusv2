@@ -42,7 +42,7 @@ export default () => {
     <>
       <Navbar paths={paths.map(({ name, path }) => [name, path])} />
       <Switch>
-        {paths.map(({ path, component }) => <Route exact path={path} component={component} />)}
+        {paths.map(({ path, component }) => <Route exact key={path} path={path} component={component} />)}
         <Route component={NotFound} />
       </Switch>
     </>

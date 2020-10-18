@@ -15,4 +15,11 @@ const registerSchema = joi.object({
   captcha: joi.string(),
 });
 
-export default registerSchema;
+export interface RegistrationData {
+  username: string,
+  password: string,
+  email: string,
+  captcha: string
+}
+
+export { registerSchema };

@@ -7,7 +7,7 @@ export default (props: { paths: string[][] }) => {
   return (
     <div className="navBar row">
       {paths.map(([name, path]) => (
-        <NavLink to={path} activeClassName="activeNav" style={{ textDecoration: 'none' }}>
+        <NavLink key={name} to={path} activeClassName="activeNav" style={{ textDecoration: 'none' }}>
           <div
             className="col-auto navElement"
           >

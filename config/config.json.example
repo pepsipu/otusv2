@@ -1,4 +1,5 @@
 {
   "origin": "",
-  "recaptchaSecret": ""
+  "recaptchaSecret": "",
+  "bcryptRounds": 10
 }
