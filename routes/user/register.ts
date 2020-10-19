@@ -6,24 +6,31 @@ import { createUser } from '../../schema/user';
 export default {
   routes: [(router: express.Router) => {
     router.post('/user/register', async (req, res) => {
+      const raiseError = (error: string | string[], statusCode: number) => {
+        res.status(statusCode);
+        res.send({ error });
+        res.end();
+      };
       const { value, error } = registerSchema.validate(req.body);
       if (error) {
-        res.send({ error });
+        raiseError(error.details.map((detail) => detail.message), 400);
         return;
       }
       const {
         username, email, password, captcha,
       }: RegistrationData = value;
       if (!await validRecaptcha(captcha)) {
-        res.send({ error: 'bad captcha' });
+        raiseError('bad captcha', 403);
         return;
       }
       const user = await createUser(username, password, email);
       if (!user) {
-        res.send({ error: 'duplicate username or email' });
+        raiseError('duplicate email or username', 403);
         return;
       }
+      res.status(200);
       res.send({ success: true });
+      res.end();
     });
   }],
 };

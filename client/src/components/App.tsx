@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import { useCookies } from 'react-cookie';
+import { withCookies } from 'react-cookie';
 
 import Navbar from './ui/Navbar';
 import './App.css';
@@ -14,12 +14,11 @@ const anonPath = [
   {
     name: 'register',
     path: '/register',
-    component: Register,
+    component: withCookies(Register),
   },
 ];
 
 const userPath = [
-
   {
     name: 'profile',
     path: '/profile',
@@ -35,9 +34,9 @@ const defaultPaths = [
   },
 ];
 
-export default () => {
-  const [cookies] = useCookies(['username']);
-  const paths = [...defaultPaths, ...cookies.username ? userPath : anonPath];
+export default (props: { cookies: any }) => {
+  const { cookies } = props;
+  const paths = [...defaultPaths, ...cookies.get('username') ? userPath : anonPath];
   return (
     <>
       <Navbar paths={paths.map(({ name, path }) => [name, path])} />

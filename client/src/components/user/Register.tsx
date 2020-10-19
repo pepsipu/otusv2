@@ -1,43 +1,57 @@
 import React, { useRef, useState } from 'react';
 import 'bootstrap-4-grid';
-import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import ReCAPTCHA from 'react-google-recaptcha';
+import { toast } from 'react-toastify';
+import { useCookies } from 'react-cookie';
 import { recaptcha, apiEndpoint } from '../../config.json';
 
 // idk why by ref is defined as { current: null } for some reason
 type Ref = { current: any };
 
-enum RegisterStatus {
-  Success,
-  Unhandled,
-}
-
-const register = async (email: string, username: string, password: string, captcha: string): Promise<RegisterStatus> => {
-  const response = await axios.post(`${apiEndpoint}/user/register`, {
+const register = async (email: string, username: string, password: string, captcha: string): Promise<boolean> => {
+  const { error }: RegisterResponse = (await axios.post(`${apiEndpoint}/user/register`, {
     email,
     username,
     password,
     captcha,
-  });
-  console.log(response);
-  switch (response.status) {
-    case 200:
-      return RegisterStatus.Success;
-    default:
-      return RegisterStatus.Unhandled;
+  })).data;
+  if (error) {
+    if (Array.isArray(error)) {
+      error.forEach((e) => toast.error((e)));
+    } else {
+      toast.error(error);
+    }
+    return false;
   }
+  toast.success('registered!', {
+    autoClose: 1500,
+  });
+  return true;
 };
 
-export default () => {
+export default (props: { cookies: any }) => {
+  console.log(props);
+  const { cookies } = props;
+
   const [, forceUpdate] = useState();
   const [captcha, setCaptcha] = useState('');
+
+  const history = useHistory();
+
   const emailInput: Ref = useRef(null);
   const usernameInput: Ref = useRef(null);
   const passwordInput: Ref = useRef(null);
+  const captchaInput: Ref = useRef(null);
+
+  const email = emailInput.current?.value;
+  const username = usernameInput.current?.value;
+  const password = passwordInput.current?.value;
+
   // const fieldsFilled = [emailInput, usernameInput, passwordInput].map((i) => i.current?.value).every((v) => v)
-  const filled = emailInput.current?.value && usernameInput.current?.value && passwordInput.current?.value && captcha;
+  const filled = email && username && password && captcha;
   return (
     <>
       <div className="centerField">
@@ -52,6 +66,7 @@ export default () => {
           sitekey={recaptcha}
           onChange={(token) => setCaptcha(token ?? '')}
           theme="dark"
+          ref={captchaInput}
         />
         <br />
         <motion.button
@@ -65,7 +80,14 @@ export default () => {
           }}
           onClick={() => {
             if (filled) {
-              register(emailInput.current?.value, usernameInput.current?.value, passwordInput.current?.value, captcha);
+              register(email, username, password, captcha)
+                .then((success) => {
+                  if (success) {
+                    cookies.set('username', username);
+                    history.push('/home');
+                  }
+                });
+              captchaInput.current?.reset();
             }
           }}
         >
@@ -75,3 +97,7 @@ export default () => {
     </>
   );
 };
+
+interface RegisterResponse {
+  error?: string | string[]
+}
