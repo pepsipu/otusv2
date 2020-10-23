@@ -5,10 +5,9 @@ import { motion } from 'framer-motion';
 import axios from 'axios';
 import ReCAPTCHA from 'react-google-recaptcha';
 import { toast } from 'react-toastify';
-import { useCookies } from 'react-cookie';
 import { recaptcha, apiEndpoint } from '../../config.json';
 
-// idk why by ref is defined as { current: null } for some reason
+// ref is defined as { current: null }
 type Ref = { current: any };
 
 const register = async (email: string, username: string, password: string, captcha: string): Promise<boolean> => {

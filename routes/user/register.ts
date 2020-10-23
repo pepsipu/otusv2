@@ -28,6 +28,11 @@ export default {
         raiseError('duplicate email or username', 403);
         return;
       }
+      if (!req.session) {
+        raiseError('server could not make a session, please report', 500);
+        return;
+      }
+      req.session.userId = user.id;
       res.status(200);
       res.send({ success: true });
       res.end();

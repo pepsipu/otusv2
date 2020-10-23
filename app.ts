@@ -3,6 +3,8 @@ import chalk from 'chalk';
 import mongoose from 'mongoose';
 import helmet from 'helmet';
 import cors from 'cors';
+import session from 'express-session';
+import MongoStore from 'connect-mongo';
 import { origin } from './config/config.json';
 
 import './config/env';
@@ -11,15 +13,13 @@ import router from './routes/router';
 
 const app: express.Application = express();
 const port: number = +(process.env.PORT || 3000);
-const { MONGO_URI } = process.env;
+const { MONGO_URI, SESSION_SECRET } = process.env;
 
 app.use(cors({
   origin,
 }));
 app.use(helmet());
 app.use(express.json());
-app.use('', router);
-app.use(expressLogger);
 
 mongoose.connect(MONGO_URI || '', {
   useNewUrlParser: true,
@@ -31,6 +31,16 @@ mongoose.connect(MONGO_URI || '', {
     logger.error(`Mongoose error while connecting to MongoDB: ${err}`);
     throw err;
   }
+  app.use(session({
+    secret: SESSION_SECRET || '',
+    resave: false,
+    saveUninitialized: true,
+    store: new (MongoStore(session))({
+      mongooseConnection: mongoose.connection,
+    }),
+  }));
+  app.use(expressLogger);
+  app.use('', router);
   app.listen(port, () => {
     logger.info(`Express server has started listening on port ${chalk.red(port)}.`);
   });
