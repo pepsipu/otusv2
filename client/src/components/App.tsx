@@ -4,46 +4,68 @@ import { withCookies } from 'react-cookie';
 
 import NavbarNoCookie from './ui/Navbar';
 import './App.css';
-import 'bootstrap-4-grid';
 import Home from './Home';
 import Profile from './user/Profile';
 import NotFound from './NotFound';
 import Register from './user/Register';
+import Logout from './user/Logout';
 
 const Navbar = withCookies(NavbarNoCookie);
 
-const anonPath = [
-  {
-    name: 'register',
-    path: '/register',
-    component: withCookies(Register),
-  },
-];
+enum UserType {
+  AnonUser,
+  RegisteredUser,
+}
 
-const userPath = [
-  {
-    name: 'profile',
-    path: '/profile',
-    component: Profile,
-  },
-];
-
-const defaultPaths = [
+const paths = [
   {
     name: 'home',
     path: '/home',
     component: withCookies(Home),
+    nav: () => true,
+    route: () => true,
+    user: false,
+  },
+  {
+    name: 'register',
+    path: '/register',
+    component: withCookies(Register),
+    nav: (userType: UserType) => userType === UserType.AnonUser,
+    route: () => true,
+    user: false,
+  },
+  {
+    name: 'profile',
+    path: '/profile',
+    component: Profile,
+    nav: () => false,
+    route: (userType: UserType) => userType === UserType.RegisteredUser,
+    user: true,
+  },
+  {
+    name: 'logout',
+    path: '/logout',
+    component: Logout,
+    nav: () => false,
+    route: (userType: UserType) => userType === UserType.RegisteredUser,
+    user: true,
   },
 ];
 
 export default (props: { cookies: any }) => {
   const { cookies } = props;
-  const paths = [...defaultPaths, ...cookies.get('username') ? userPath : anonPath];
+  const userType = cookies.get('username') ? UserType.RegisteredUser : UserType.AnonUser;
+  const navPaths = paths.filter(({ nav }) => nav(userType));
+  const routePaths = paths.filter(({ route }) => route(userType));
+  const userOptions = paths.filter(({ user }) => user);
   return (
     <>
-      <Navbar paths={paths.map(({ name, path }) => [name, path])} />
+      <Navbar
+        paths={navPaths.map(({ name, path }) => [name, path])}
+        userOptions={userOptions.map(({ name, path }) => [name, path])}
+      />
       <Switch>
-        {[...defaultPaths, ...userPath, ...anonPath].map(({ path, component }) => <Route exact key={path} path={path} component={component} />)}
+        {routePaths.map(({ path, component }) => <Route exact key={path} path={path} component={component} />)}
         <Route component={NotFound} />
       </Switch>
     </>

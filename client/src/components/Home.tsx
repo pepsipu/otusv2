@@ -1,5 +1,4 @@
 import React from 'react';
-import 'bootstrap-4-grid';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ReactCookieProps } from 'react-cookie';

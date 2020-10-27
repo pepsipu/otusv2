@@ -21,3 +21,22 @@
     border-bottom: 2px solid #f05d5e !important;
     color: #f05d5e;
 }
+
+.profileDropdown {
+    background: #101010;
+    border: 1px solid #2f2e2e;
+    padding: 10px;
+    min-width: 200%;
+    color: #f1f2eb;
+}
+
+.dropdownItem {
+    color: #f1f2eb;
+    padding-left: 0;
+}
+
+.dropdownItem:hover {
+    background: none;
+    color: #b1b1af;
+    padding-left: 0;
+}

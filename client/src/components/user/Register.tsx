@@ -1,5 +1,4 @@
 import React, { useRef, useState } from 'react';
-import 'bootstrap-4-grid';
 import { useHistory } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import axios from 'axios';
@@ -10,8 +9,8 @@ import { recaptcha, apiEndpoint } from '../../config.json';
 // ref is defined as { current: null }
 type Ref = { current: any };
 
-const register = async (email: string, username: string, password: string, captcha: string): Promise<boolean> => {
-  const { error }: RegisterResponse = (await axios.post(`${apiEndpoint}/user/register`, {
+const register = async (email: string, username: string, password: string, captcha: string): Promise<string> => {
+  const { error, id }: RegisterResponse = (await axios.post(`${apiEndpoint}/user/register`, {
     email,
     username,
     password,
@@ -23,12 +22,10 @@ const register = async (email: string, username: string, password: string, captc
     } else {
       toast.error(error);
     }
-    return false;
+    return '';
   }
-  toast.success('registered!', {
-    autoClose: 1500,
-  });
-  return true;
+  toast.success('registered!');
+  return id;
 };
 
 export default (props: { cookies: any }) => {
@@ -80,9 +77,11 @@ export default (props: { cookies: any }) => {
           onClick={() => {
             if (filled) {
               register(email, username, password, captcha)
-                .then((success) => {
-                  if (success) {
+                .then((id) => {
+                  if (id) {
                     cookies.set('username', username);
+                    cookies.set('email', email);
+                    cookies.set('id', id);
                     history.push('/home');
                   }
                 });
@@ -98,5 +97,6 @@ export default (props: { cookies: any }) => {
 };
 
 interface RegisterResponse {
-  error?: string | string[]
+  error?: string | string[],
+  id: string
 }

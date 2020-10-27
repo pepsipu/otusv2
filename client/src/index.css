@@ -28,6 +28,11 @@ a {
     color: #f05d5e;
 }
 
+a:hover {
+    color: #f67b7c;
+
+}
+
 .centerField {
     display: flex;
     padding: 30px;

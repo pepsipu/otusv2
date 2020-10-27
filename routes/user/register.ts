@@ -1,16 +1,16 @@
 import express from 'express';
+import { createHash } from 'crypto';
 import validRecaptcha from '../../api/recaptcha';
 import { registerSchema, RegistrationData } from '../../schema/user/register';
 import { createUser } from '../../schema/user';
+import { createRaiseError } from '../util';
+
+const sha1 = createHash('sha1');
 
 export default {
   routes: [(router: express.Router) => {
     router.post('/user/register', async (req, res) => {
-      const raiseError = (error: string | string[], statusCode: number) => {
-        res.status(statusCode);
-        res.send({ error });
-        res.end();
-      };
+      const raiseError = createRaiseError(res);
       const { value, error } = registerSchema.validate(req.body);
       if (error) {
         raiseError(error.details.map((detail) => detail.message), 400);
@@ -34,7 +34,8 @@ export default {
       }
       req.session.userId = user.id;
       res.status(200);
-      res.send({ success: true });
+      // it does not matter what the hash algo is, as long as we conceal the id
+      res.send({ id: sha1.update(user.id).digest('hex') });
       res.end();
     });
   }],

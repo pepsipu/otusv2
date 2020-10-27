@@ -1,6 +1,5 @@
 import React from 'react';
 import './App.css';
-import 'bootstrap-4-grid';
 
 /* there really is no 404 but we don't talk about that */
 export default () => (
