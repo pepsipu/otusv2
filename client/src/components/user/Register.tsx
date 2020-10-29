@@ -25,11 +25,10 @@ const register = async (email: string, username: string, password: string, captc
     return '';
   }
   toast.success('registered!');
-  return id;
+  return 'nice';
 };
 
 export default (props: { cookies: any }) => {
-  console.log(props);
   const { cookies } = props;
 
   const [, forceUpdate] = useState();
@@ -81,7 +80,6 @@ export default (props: { cookies: any }) => {
                   if (id) {
                     cookies.set('username', username);
                     cookies.set('email', email);
-                    cookies.set('id', id);
                     history.push('/home');
                   }
                 });

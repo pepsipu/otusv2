@@ -5,8 +5,6 @@ import { registerSchema, RegistrationData } from '../../schema/user/register';
 import { createUser } from '../../schema/user';
 import { createRaiseError } from '../util';
 
-const sha1 = createHash('sha1');
-
 export default {
   routes: [(router: express.Router) => {
     router.post('/user/register', async (req, res) => {
@@ -34,8 +32,8 @@ export default {
       }
       req.session.userId = user.id;
       res.status(200);
-      // it does not matter what the hash algo is, as long as we conceal the id
-      res.send({ id: sha1.update(user.id).digest('hex') });
+      res.cookie('id', user.publicId);
+      res.send({ error: false });
       res.end();
     });
   }],

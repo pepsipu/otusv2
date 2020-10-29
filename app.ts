@@ -5,6 +5,7 @@ import helmet from 'helmet';
 import cors from 'cors';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
+import path from 'path';
 import { origin } from './config/config.json';
 
 import './config/env';
@@ -40,7 +41,11 @@ mongoose.connect(MONGO_URI || '', {
     }),
   }));
   app.use(expressLogger);
+  app.use(express.static(path.join(__dirname, 'client')));
   app.use('', router);
+  app.get('/*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client/index.html'));
+  });
   app.listen(port, () => {
     logger.info(`Express server has started listening on port ${chalk.red(port)}.`);
   });

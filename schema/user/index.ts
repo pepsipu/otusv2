@@ -1,20 +1,29 @@
 import mongoose, { Document } from 'mongoose';
 import { genSalt, hash } from 'bcrypt';
+import { createHash } from 'crypto';
 import { bcryptRounds } from '../../config/config.json';
 
 const userSchema = new mongoose.Schema({
   username: String,
   email: String,
   passwordHash: String,
+  publicId: String,
 });
 
-const User = mongoose.model('User', userSchema);
+export interface IUser extends Document {
+  username: string,
+  email: string,
+  passwordHash: string,
+  publicId: string,
+}
+
+const User = mongoose.model<IUser>('User', userSchema);
 
 const createUser = async (
   username: string,
   password: string,
   email: string,
-): Promise<Document | null> => {
+): Promise<IUser | null> => {
   if (await User.exists({
     $or: [
       { username },
@@ -25,6 +34,7 @@ const createUser = async (
   }
   const passwordHash = await hash(password, await genSalt(bcryptRounds));
   const user = new User({ username, email, passwordHash });
+  user.publicId = createHash('sha1').update(user.id).digest('hex');
   await user.save();
   return user;
 };

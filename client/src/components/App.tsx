@@ -45,7 +45,7 @@ const paths = [
   {
     name: 'logout',
     path: '/logout',
-    component: Logout,
+    component: withCookies(Logout),
     nav: () => false,
     route: (userType: UserType) => userType === UserType.RegisteredUser,
     user: true,

@@ -21,6 +21,7 @@ const router = (
 );
 
 axios.defaults.validateStatus = () => true;
+axios.defaults.withCredentials = true;
 toast.configure({
   position: 'bottom-right',
   autoClose: 5000,
@@ -30,4 +31,5 @@ toast.configure({
   draggable: true,
 });
 
+console.log('yo');
 ReactDOM.render(router, document.getElementById('root'));
