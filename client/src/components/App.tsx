@@ -9,6 +9,7 @@ import Profile from './user/Profile';
 import NotFound from './NotFound';
 import Register from './user/Register';
 import Logout from './user/Logout';
+import Login from './user/Login';
 
 const Navbar = withCookies(NavbarNoCookie);
 
@@ -30,6 +31,14 @@ const paths = [
     name: 'register',
     path: '/register',
     component: withCookies(Register),
+    nav: (userType: UserType) => userType === UserType.AnonUser,
+    route: () => true,
+    user: false,
+  },
+  {
+    name: 'login',
+    path: '/login',
+    component: withCookies(Login),
     nav: (userType: UserType) => userType === UserType.AnonUser,
     route: () => true,
     user: false,

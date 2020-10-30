@@ -9,10 +9,9 @@ import { recaptcha, apiEndpoint } from '../../config.json';
 // ref is defined as { current: null }
 type Ref = { current: any };
 
-const register = async (email: string, username: string, password: string, captcha: string): Promise<boolean> => {
-  const { error }: { error: string | string[] } = (await axios.post(`${apiEndpoint}/user/register`, {
+const login = async (email: string, password: string, captcha: string): Promise<boolean> => {
+  const { error }: { error: string | string[] } = (await axios.post(`${apiEndpoint}/user/login`, {
     email,
-    username,
     password,
     captcha,
   })).data;
@@ -24,7 +23,7 @@ const register = async (email: string, username: string, password: string, captc
     }
     return false;
   }
-  toast.success('registered!');
+  toast.success('logged in!');
   return true;
 };
 
@@ -37,24 +36,20 @@ export default (props: { cookies: any }) => {
   const history = useHistory();
 
   const emailInput: Ref = useRef(null);
-  const usernameInput: Ref = useRef(null);
   const passwordInput: Ref = useRef(null);
   const captchaInput: Ref = useRef(null);
 
   const email = emailInput.current?.value;
-  const username = usernameInput.current?.value;
   const password = passwordInput.current?.value;
 
-  // const fieldsFilled = [emailInput, usernameInput, passwordInput].map((i) => i.current?.value).every((v) => v)
-  const filled = email && username && password && captcha;
+  const filled = email && password && captcha;
   return (
     <>
       <div className="centerField">
-        <h1>register</h1>
-        <small>please dont spam new accounts!</small>
+        <h1>login</h1>
+        <small>login into your account here.</small>
         <br />
         <input placeholder="email" ref={emailInput} onInput={forceUpdate} />
-        <input placeholder="username" ref={usernameInput} onInput={forceUpdate} />
         <input placeholder="password" type="password" ref={passwordInput} onInput={forceUpdate} />
         <br />
         <ReCAPTCHA
@@ -75,9 +70,9 @@ export default (props: { cookies: any }) => {
           }}
           onClick={() => {
             if (filled) {
-              register(email, username, password, captcha)
-                .then((registered) => {
-                  if (registered) {
+              login(email, password, captcha)
+                .then((loggedIn) => {
+                  if (loggedIn) {
                     history.push('/home');
                   }
                 });

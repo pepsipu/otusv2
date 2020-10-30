@@ -1,8 +1,9 @@
 import express from 'express';
 import { compare } from 'bcrypt';
-import { loginSchema, LoginData } from '../../schema/user/login';
+import { loginSchema, LoginData, login } from '../../schema/user/login';
 import { User } from '../../schema/user';
 import { createRaiseError } from '../util';
+import validRecaptcha from '../../api/recaptcha';
 
 export default {
   routes: [(router: express.Router) => {
@@ -13,25 +14,22 @@ export default {
         raiseError(error.details.map((detail) => detail.message), 400);
         return;
       }
-      const { username, password }: LoginData = value;
-      const user = await User.findOne({ username });
+      const { email, password, captcha }: LoginData = value;
+      if (!await validRecaptcha(captcha)) {
+        raiseError('bad captcha', 403);
+        return;
+      }
+      const user = await User.findOne({ email });
       if (!user) {
         raiseError('username does not exist', 404);
         return;
       }
       if (!await compare(password, user.passwordHash)) {
         raiseError('passwords do not match', 401);
-        return;
       }
-      if (!req.session) {
+      if (!login(req, res, user)) {
         raiseError('server could not make a session, please report', 500);
-        return;
       }
-      req.session.userId = user.id;
-      res.status(200);
-      res.cookie('id', user.publicId);
-      res.send({ error: false });
-      res.end();
     });
   }],
 };

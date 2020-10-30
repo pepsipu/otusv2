@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "tsc": "tsc",
-    "run": "rm -r build && mkdir -p build && cd client && npm run build && cd .. && npm run tsc && node build/app.js"
+    "runAll": "rm -r build && mkdir -p build && cd client && npm run build && cd .. && npm run tsc && node build/app.js",
+    "run": "npm run tsc && node build/app.js"
   },
   "keywords": [],
   "author": "",

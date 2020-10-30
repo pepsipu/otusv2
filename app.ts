@@ -41,6 +41,10 @@ mongoose.connect(MONGO_URI || '', {
     }),
   }));
   app.use(expressLogger);
+  app.use((req, res, next) => {
+    res.setHeader('Content-Security-Policy', '');
+    return next();
+  });
   app.use(express.static(path.join(__dirname, 'client')));
   app.use('', router);
   app.get('/*', (req, res) => {

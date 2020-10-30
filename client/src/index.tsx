@@ -31,5 +31,4 @@ toast.configure({
   draggable: true,
 });
 
-console.log('yo');
 ReactDOM.render(router, document.getElementById('root'));

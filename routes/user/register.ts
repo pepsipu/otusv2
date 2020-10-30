@@ -4,6 +4,7 @@ import validRecaptcha from '../../api/recaptcha';
 import { registerSchema, RegistrationData } from '../../schema/user/register';
 import { createUser } from '../../schema/user';
 import { createRaiseError } from '../util';
+import { login } from '../../schema/user/login';
 
 export default {
   routes: [(router: express.Router) => {
@@ -26,15 +27,9 @@ export default {
         raiseError('duplicate email or username', 403);
         return;
       }
-      if (!req.session) {
+      if (!login(req, res, user)) {
         raiseError('server could not make a session, please report', 500);
-        return;
       }
-      req.session.userId = user.id;
-      res.status(200);
-      res.cookie('id', user.publicId);
-      res.send({ error: false });
-      res.end();
     });
   }],
 };
