@@ -26,6 +26,7 @@ export default {
       }
       if (!await compare(password, user.passwordHash)) {
         raiseError('passwords do not match', 401);
+        return;
       }
       if (!login(req, res, user)) {
         raiseError('server could not make a session, please report', 500);

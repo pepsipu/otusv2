@@ -16,22 +16,22 @@ const app: express.Application = express();
 const port: number = +(process.env.PORT || 3000);
 const { MONGO_URI, SESSION_SECRET } = process.env;
 
-app.use(cors({
-  origin,
-}));
-app.use(helmet());
-app.use(express.json());
+const run = async () => {
+  app.use(cors({
+    origin,
+  }));
+  app.use(helmet());
+  app.use(express.json());
 
-mongoose.connect(MONGO_URI || '', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useFindAndModify: false,
-  useCreateIndex: true,
-}, (err) => {
-  if (err) {
+  await mongoose.connect(MONGO_URI || '', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+    useCreateIndex: true,
+  }).catch((err) => {
     logger.error(`Mongoose error while connecting to MongoDB: ${err}`);
-    throw err;
-  }
+    process.abort();
+  });
   app.use(session({
     secret: SESSION_SECRET || '',
     resave: false,
@@ -50,7 +50,7 @@ mongoose.connect(MONGO_URI || '', {
   app.get('/*', (req, res) => {
     res.sendFile(path.join(__dirname, 'client/index.html'));
   });
-  app.listen(port, () => {
-    logger.info(`Express server has started listening on port ${chalk.red(port)}.`);
-  });
-});
+  await app.listen(port);
+};
+
+run().then(() => logger.info(`Express server has started listening on port ${chalk.red(port)}.`));
