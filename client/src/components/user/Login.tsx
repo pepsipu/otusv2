@@ -28,8 +28,6 @@ const login = async (email: string, password: string, captcha: string): Promise<
 };
 
 export default (props: { cookies: any }) => {
-  const { cookies } = props;
-
   const [, forceUpdate] = useState();
   const [captcha, setCaptcha] = useState('');
 

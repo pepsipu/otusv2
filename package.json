@@ -5,8 +5,11 @@
   "main": "index.js",
   "scripts": {
     "tsc": "tsc",
-    "runAll": "rm -r build && mkdir -p build && cd client && npm run build && cd .. && npm run tsc && node build/app.js",
-    "run": "npm run tsc && node build/app.js"
+    "clean": "rm -r build && mkdir build",
+    "runAll": "npm run clean && npm run --prefix client build && npm run run",
+    "run": "npm run tsc && node build/app.js",
+    "build": "npm run clean && npm run --prefix client build && npm run tsc",
+    "buildClient": "npm run --prefix client build"
   },
   "keywords": [],
   "author": "",

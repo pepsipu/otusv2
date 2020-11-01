@@ -54,3 +54,7 @@ input {
     font-size: 13pt;
     font-family: 'Roboto Mono', monospace;
 }
+
+input[type="checkbox"]:active {
+    background:  #913434;
+}

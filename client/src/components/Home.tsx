@@ -32,7 +32,7 @@ export default (props: ReactCookieProps) => {
         </p>
       </div>
       <br />
-      <Link to={username ? '404' : 'register'}>
+      <Link to={username ? 'challenges' : 'register'}>
         <motion.button
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
@@ -42,7 +42,7 @@ export default (props: ReactCookieProps) => {
             fontSize: '12pt',
           }}
         >
-          {username ? 'lol ecks dee »' : 'register »'}
+          {username ? 'challenges »' : 'register »'}
         </motion.button>
       </Link>
     </div>

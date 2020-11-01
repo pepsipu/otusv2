@@ -10,6 +10,7 @@ import NotFound from './NotFound';
 import Register from './user/Register';
 import Logout from './user/Logout';
 import Login from './user/Login';
+import Challenges from './challenges/Challenges';
 
 const Navbar = withCookies(NavbarNoCookie);
 
@@ -28,6 +29,14 @@ const paths = [
     user: false,
   },
   {
+    name: 'challenges',
+    path: '/challenges',
+    component: Challenges,
+    nav: (userType: UserType) => userType === UserType.RegisteredUser,
+    route: () => true,
+    user: false,
+  },
+  {
     name: 'register',
     path: '/register',
     component: withCookies(Register),
@@ -38,7 +47,7 @@ const paths = [
   {
     name: 'login',
     path: '/login',
-    component: withCookies(Login),
+    component: Login,
     nav: (userType: UserType) => userType === UserType.AnonUser,
     route: () => true,
     user: false,
