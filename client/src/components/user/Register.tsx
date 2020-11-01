@@ -5,28 +5,10 @@ import axios from 'axios';
 import ReCAPTCHA from 'react-google-recaptcha';
 import { toast } from 'react-toastify';
 import { recaptcha, apiEndpoint } from '../../config.json';
+import { postWithErrors } from '../../util/requests';
 
 // ref is defined as { current: null }
 type Ref = { current: any };
-
-const register = async (email: string, username: string, password: string, captcha: string): Promise<boolean> => {
-  const { error }: { error: string | string[] } = (await axios.post(`${apiEndpoint}/user/register`, {
-    email,
-    username,
-    password,
-    captcha,
-  })).data;
-  if (error) {
-    if (Array.isArray(error)) {
-      error.forEach((e) => toast.error((e)));
-    } else {
-      toast.error(error);
-    }
-    return false;
-  }
-  toast.success('registered!');
-  return true;
-};
 
 export default (props: { cookies: any }) => {
   const { cookies } = props;
@@ -75,9 +57,15 @@ export default (props: { cookies: any }) => {
           }}
           onClick={() => {
             if (filled) {
-              register(email, username, password, captcha)
+              postWithErrors('user/register', {
+                email,
+                username,
+                password,
+                captcha,
+              })
                 .then((registered) => {
                   if (registered) {
+                    toast.success('registered!');
                     history.push('/home');
                   }
                 });

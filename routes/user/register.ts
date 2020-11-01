@@ -1,5 +1,4 @@
 import express from 'express';
-import { createHash } from 'crypto';
 import validRecaptcha from '../../api/recaptcha';
 import { registerSchema, RegistrationData } from '../../schema/user/register';
 import { createUser } from '../../schema/user';

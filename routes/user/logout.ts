@@ -10,6 +10,9 @@ export default {
         return;
       }
       req.session.userId = null;
+      res.clearCookie('username');
+      res.clearCookie('email');
+      res.clearCookie('id');
       res.status(200);
       res.send({ error: false });
       res.end();

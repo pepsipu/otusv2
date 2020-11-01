@@ -2,6 +2,10 @@ import React, { useRef } from 'react';
 import './Challenges.css';
 import Check from '../ui/Check';
 
+// const getChallenges = async (): Promise<null> => {
+//
+// };
+
 export default () => {
   const onlyRanked = useRef(null);
   const onlyUnranked = useRef(null);
