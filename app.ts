@@ -40,16 +40,16 @@ const run = async () => {
       mongooseConnection: mongoose.connection,
     }),
   }));
-  app.use(expressLogger);
   app.use((req, res, next) => {
     res.setHeader('Content-Security-Policy', '');
     return next();
   });
   app.use(express.static(path.join(__dirname, 'client')));
-  app.use('', router);
+  app.use('/api', router);
   app.get('/*', (req, res) => {
     res.sendFile(path.join(__dirname, 'client/index.html'));
   });
+  app.use(expressLogger);
   await app.listen(port);
 };
 

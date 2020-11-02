@@ -1,4 +1,4 @@
 {
   "recaptcha": "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI",
-  "apiEndpoint": "http://localhost:3000"
+  "apiEndpoint": "http://localhost:3000/api"
 }
