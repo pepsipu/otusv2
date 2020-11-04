@@ -1,8 +1,10 @@
 import express from 'express';
-import users from './user';
+import user from './user';
+import challenge from './challenge';
 
 const routes = [
-  ...users.routes,
+  ...user.routes,
+  ...challenge.routes,
 ];
 
 const router = express.Router();

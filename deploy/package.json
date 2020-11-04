@@ -4,11 +4,12 @@
   "description": "Admin console for deploying and other misc tasks.",
   "main": "app.js",
   "scripts": {
-    "run": "node app.js"
+    "run": "node --experimental-repl-await app.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^8.2.0",
     "mongoose": "^5.10.11"
   }
 }
