@@ -83,7 +83,7 @@ export default (props: { cookies: any }) => {
         userOptions={userOptions.map(({ name, path }) => [name, path])}
       />
       <Switch>
-        {routePaths.map(({ path, component }) => <Route exact key={path} path={path} component={component} />)}
+        {routePaths.map(({ path, component }) => <Route key={path} path={path} component={component} />)}
         <Route component={NotFound} />
       </Switch>
     </>

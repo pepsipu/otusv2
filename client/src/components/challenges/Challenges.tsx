@@ -16,7 +16,7 @@ export default () => {
     <>
       <div className="centerField">
         <h1>challenges</h1>
-        <div className="row w-50">
+        <div className="row w-75">
           <div className="col-auto mx-auto componentContainer">
             <h5>filter</h5>
             <Check ref={onlyRanked}>ranked</Check>

@@ -1,6 +1,7 @@
-.componentContainer {
-    background: #2f2e2e;
-    margin: 10px;
-    border-radius: 3px;
-    padding: 10px;
+.activeCategory {
+    color: white;
+}
+
+.category:hover {
+    color: #b8b8b8;
 }

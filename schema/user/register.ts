@@ -10,6 +10,8 @@ const registerSchema = joi.object({
     .required(),
   email: joi.string()
     .email()
+    .trim()
+    .lowercase()
     .max(30)
     .required(),
   captcha: joi.string(),

@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema({
   username: String,
   email: String,
   passwordHash: String,
+  emailHash: String,
   publicId: String,
 });
 
@@ -14,6 +15,7 @@ export interface IUser extends Document {
   username: string,
   email: string,
   passwordHash: string,
+  emailHash: string
   publicId: string,
 }
 
@@ -33,7 +35,12 @@ const createUser = async (
     return null;
   }
   const passwordHash = await hash(password, await genSalt(bcryptRounds));
-  const user = new User({ username, email, passwordHash });
+  const user = new User({
+    username,
+    email,
+    passwordHash,
+    emailHash: createHash('md5').update(email).digest('hex'),
+  });
   user.publicId = createHash('sha1').update(user.id).digest('hex');
   await user.save();
   return user;

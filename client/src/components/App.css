@@ -5,3 +5,10 @@ html, body {
 #root {
     background: #101010;
 }
+
+.componentContainer {
+    background: #2f2e2e;
+    margin: 10px;
+    border-radius: 3px;
+    padding: 10px;
+}

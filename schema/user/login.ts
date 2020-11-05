@@ -8,8 +8,11 @@ const loginSchema = joi.object({
   email: joi.string()
     .email()
     .max(30)
+    .trim()
+    .lowercase()
     .required(),
-  captcha: joi.string(),
+  captcha: joi.string()
+    .required(),
 });
 
 export interface LoginData {
