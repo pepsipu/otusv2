@@ -1,14 +1,15 @@
 import React from 'react';
 import './Navbar.css';
 import { NavLink } from 'react-router-dom';
-import { ReactCookieProps } from 'react-cookie';
+import { ReactCookieProps, withCookies } from 'react-cookie';
 import { Dropdown } from 'react-bootstrap';
 import Gravatar from 'react-gravatar';
 
-export default (props: { paths: string[][], userOptions: string[][] } & ReactCookieProps) => {
+export default withCookies((props: { paths: string[][], userOptions: string[][] } & ReactCookieProps) => {
   const { paths, cookies, userOptions } = props;
   const username = cookies?.get('username');
   const email = cookies?.get('email');
+  const id = cookies?.get('id');
   return (
     <div className="navBar row">
       {paths.map(([name, path]) => (
@@ -52,8 +53,19 @@ export default (props: { paths: string[][], userOptions: string[][] } & ReactCoo
           />
           <Dropdown.Menu className="profileDropdown container">
             <div className="row">
-              <div className="col-auto">
-                <Gravatar email={email} />
+              <div
+                className="col-auto"
+                style={{
+                  paddingRight: '0',
+                }}
+              >
+                <Gravatar
+                  style={{
+                    borderRadius: '35px',
+                  }}
+                  size={70}
+                  email={email}
+                />
               </div>
               <div className="col-auto">
                 {username}
@@ -67,14 +79,15 @@ export default (props: { paths: string[][], userOptions: string[][] } & ReactCoo
               </div>
             </div>
             <Dropdown.Divider />
-            {userOptions.map(([name, path]) => (
-              <Dropdown.Item className="dropdownItem">
+            {[...userOptions, ['profile', `/profile/${id}/ctf`]].map(([name, path]) => (
+              <>
                 <NavLink key={name} to={path} style={{ textDecoration: 'none' }}>
                   <span className="dropdownItem">
                     {name}
                   </span>
                 </NavLink>
-              </Dropdown.Item>
+                <br />
+              </>
             ))}
           </Dropdown.Menu>
         </Dropdown>
@@ -83,4 +96,4 @@ export default (props: { paths: string[][], userOptions: string[][] } & ReactCoo
       )}
     </div>
   );
-};
+});

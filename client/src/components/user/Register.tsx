@@ -1,18 +1,15 @@
 import React, { useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import axios from 'axios';
 import ReCAPTCHA from 'react-google-recaptcha';
 import { toast } from 'react-toastify';
-import { recaptcha, apiEndpoint } from '../../config.json';
+import { recaptcha } from '../../config.json';
 import { postWithErrors } from '../../util/requests';
 
 // ref is defined as { current: null }
 type Ref = { current: any };
 
 export default (props: { cookies: any }) => {
-  const { cookies } = props;
-
   const [, forceUpdate] = useState();
   const [captcha, setCaptcha] = useState('');
 
@@ -79,8 +76,3 @@ export default (props: { cookies: any }) => {
     </>
   );
 };
-
-interface RegisterResponse {
-  error?: string | string[],
-  id: string
-}

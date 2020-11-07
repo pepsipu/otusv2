@@ -1,10 +1,30 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { NavLink, useParams } from 'react-router-dom';
 import Gravatar from 'react-gravatar';
-import { withCookies } from 'react-cookie';
+import { getWithErrors } from '../../util/requests';
 
-export default withCookies((props) => {
-  const { cookies } = props;
+const categories = {
+  ctf: {
+    name: 'ctf',
+    path: 'ctf',
+  },
+  cyberPatriot: {
+    name: 'cyberpatriot',
+    path: 'cp',
+  },
+};
+
+export default () => {
+  const { userId, category } = useParams();
+  const [{ username, emailHash }, setProfile]: [ProfileData, any] = useState({
+    username: '',
+    emailHash: '',
+  }) as [any, any];
+
+  useEffect(() => {
+    getWithErrors(`/user/profile/${userId}`).then((profileData) => setProfile(profileData));
+  }, [userId, setProfile]);
+
   return (
     <>
       <div className="centerField">
@@ -16,39 +36,58 @@ export default withCookies((props) => {
           }}
         >
           <div
+            className="row"
             style={{
               background: '#1f1f1f',
               margin: 0,
               borderTopLeftRadius: '10px',
               borderTopRightRadius: '10px',
-              textAlign: 'right',
-              padding: '4px 4px 4px 4px',
+              padding: '6px',
             }}
           >
-            <NavLink
-              className="category"
-              activeClassName="activeCategory"
-              to="/profile/ctf"
-            >
-              ctf
-            </NavLink>
-            {' '}
-            <NavLink
-              className="category"
-              activeClassName="activeCategory"
-              to="/profile/cypat"
-            >
-              cyberpatriot
-            </NavLink>
+            <div className="col">profile</div>
+            <div className="col-auto" style={{ textAlign: 'right' }}>
+              {Object.values(categories).map(({ name, path }) => (
+                <>
+                  <NavLink
+                    className="category"
+                    activeClassName="activeCategory"
+                    to={`/profile/${userId}/${path}`}
+                  >
+                    {name}
+                  </NavLink>
+                  {' '}
+                </>
+              ))}
+            </div>
+
           </div>
           <div style={{
-            padding: '10px',
+            padding: '20px',
           }}
           >
-            <Gravatar />
+            <div className="row">
+              <div className="col-auto">
+                <Gravatar
+                  style={{
+                    borderRadius: '25px',
+                  }}
+                  md5={emailHash}
+                  size={150}
+                />
+              </div>
+              <div className="col-auto">
+                <h3>{username}</h3>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </>
   );
-});
+};
+
+interface ProfileData {
+  username: string,
+  emailHash: string,
+}

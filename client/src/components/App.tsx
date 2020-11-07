@@ -2,7 +2,7 @@ import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { withCookies } from 'react-cookie';
 
-import NavbarNoCookie from './ui/Navbar';
+import Navbar from './ui/Navbar';
 import './App.css';
 import Home from './Home';
 import Profile from './user/Profile';
@@ -11,8 +11,6 @@ import Register from './user/Register';
 import Logout from './user/Logout';
 import Login from './user/Login';
 import Challenges from './challenges/Challenges';
-
-const Navbar = withCookies(NavbarNoCookie);
 
 enum UserType {
   AnonUser,
@@ -23,7 +21,7 @@ const paths = [
   {
     name: 'home',
     path: '/home',
-    component: withCookies(Home),
+    component: Home,
     nav: () => true,
     route: () => true,
     user: false,
@@ -39,7 +37,7 @@ const paths = [
   {
     name: 'register',
     path: '/register',
-    component: withCookies(Register),
+    component: Register,
     nav: (userType: UserType) => userType === UserType.AnonUser,
     route: () => true,
     user: false,
@@ -54,25 +52,26 @@ const paths = [
   },
   {
     name: 'profile',
-    path: '/profile',
+    path: '/profile/:userId/:category',
     component: Profile,
     nav: () => false,
-    route: (userType: UserType) => userType === UserType.RegisteredUser,
-    user: true,
+    route: () => true,
+    user: false,
   },
   {
     name: 'logout',
     path: '/logout',
-    component: withCookies(Logout),
+    component: Logout,
     nav: () => false,
     route: (userType: UserType) => userType === UserType.RegisteredUser,
     user: true,
   },
 ];
 
-export default (props: { cookies: any }) => {
+// too lazy to check if null so dont use ReactCookieProps
+export default withCookies((props) => {
   const { cookies } = props;
-  const userType = cookies.get('username') ? UserType.RegisteredUser : UserType.AnonUser;
+  const userType = cookies?.get('username') ? UserType.RegisteredUser : UserType.AnonUser;
   const navPaths = paths.filter(({ nav }) => nav(userType));
   const routePaths = paths.filter(({ route }) => route(userType));
   const userOptions = paths.filter(({ user }) => user);
@@ -88,4 +87,4 @@ export default (props: { cookies: any }) => {
       </Switch>
     </>
   );
-};
+});

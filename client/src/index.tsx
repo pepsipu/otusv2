@@ -5,7 +5,6 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './index.css';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { withCookies } from 'react-cookie';
 
 import Landing from './components/Landing';
 import App from './components/App';
@@ -15,7 +14,7 @@ const router = (
   <Router>
     <Switch>
       <Route exact path="/" component={Landing} />
-      <Route component={withCookies(App)} />
+      <Route component={App} />
     </Switch>
   </Router>
 );

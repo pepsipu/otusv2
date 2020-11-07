@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ReactCookieProps } from 'react-cookie';
+import { ReactCookieProps, withCookies } from 'react-cookie';
 import OtusHorizontal from '../img/otus_engine_2.svg';
 
-export default (props: ReactCookieProps) => {
+export default withCookies((props: ReactCookieProps) => {
   const { cookies } = props;
   const username = cookies?.get('username');
   return (
@@ -47,4 +47,4 @@ export default (props: ReactCookieProps) => {
       </Link>
     </div>
   );
-};
+});

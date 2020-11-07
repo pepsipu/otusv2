@@ -3,13 +3,13 @@ import { useHistory } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import ReCAPTCHA from 'react-google-recaptcha';
 import { toast } from 'react-toastify';
-import { recaptcha, apiEndpoint } from '../../config.json';
+import { recaptcha } from '../../config.json';
 import { postWithErrors } from '../../util/requests';
 
 // ref is defined as { current: null }
 type Ref = { current: any };
 
-export default (props: { cookies: any }) => {
+export default () => {
   const [, forceUpdate] = useState();
   const [captcha, setCaptcha] = useState('');
 
