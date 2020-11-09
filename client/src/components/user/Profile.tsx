@@ -45,7 +45,7 @@ export default () => {
               padding: '6px',
             }}
           >
-            <div className="col">profile</div>
+            <div className="col">user profile</div>
             <div className="col-auto" style={{ textAlign: 'right' }}>
               {Object.values(categories).map(({ name, path }) => (
                 <>

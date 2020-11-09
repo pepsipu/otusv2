@@ -14,12 +14,12 @@ const logErrors = (error: string | string[]): boolean => {
 };
 
 const postWithErrors = async (path: string, postData: Object): Promise<boolean | any> => {
-  const { error, ...response } = (await axios.post(`${apiEndpoint}/${path}`, postData)).data;
+  const { error, ...response } = (await axios.post(`${apiEndpoint}${path}`, postData)).data;
   return logErrors(error) && response;
 };
 
 const getWithErrors = async (path: string): Promise<boolean | any> => {
-  const { error, ...response } = (await axios.get(`${apiEndpoint}/${path}`)).data;
+  const { error, ...response } = (await axios.get(`${apiEndpoint}${path}`)).data;
   return logErrors(error) && response;
 };
 
