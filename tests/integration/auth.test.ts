@@ -7,22 +7,69 @@ const [setupApp, stopApp, getApp] = testApp();
 beforeAll(setupApp);
 afterAll(stopApp);
 
+const user = genUser();
+let userSession: any;
+
 describe('register user', () => {
   test('rejects bad email', async () => {
     const app = getApp();
-    const user = genUser();
-    user.email = 'not-email';
-    const response = await request(app)
+    const badUser = genUser();
+    badUser.email = 'not-email';
+    const { status, body } = await request(app)
       .post('/api/user/register')
-      .send(user);
-    expect(response.status).toBe(400);
+      .send({ ...badUser, captcha: 'captcha' });
+
+    expect(body).toEqual({
+      error: [
+        '"email" must be a valid email',
+      ],
+    });
+    expect(status).toBe(400);
   });
-  let registerSession: any;
   test('register user successfully', async () => {
-    registerSession = session(getApp());
-    const response = await registerSession
+    userSession = session(getApp());
+    const { status, body } = await userSession
       .post('/api/user/register')
-      .send(genUser());
-    expect(response.status).toBe(200);
+      .send({ ...user, captcha: 'captcha' });
+
+    expect(body).toEqual({ error: false });
+    expect(status).toBe(200);
+  });
+});
+
+describe('logout user', () => {
+  test('rejects not logged in', async () => {
+    const { status, body } = await request(getApp())
+      .post('/api/user/logout');
+
+    expect(body).toEqual({ error: 'not logged in' });
+    expect(status).toBe(403);
+  });
+  test('logout user successfully', async () => {
+    const { status, body } = await userSession
+      .post('/api/user/logout');
+
+    expect(body).toEqual({ error: false });
+    expect(status).toBe(200);
+  });
+});
+
+describe('login user', () => {
+  test('rejects bad password', async () => {
+    const { status, body } = await request(getApp())
+      .post('/api/user/login')
+      .send({ email: user.email, password: 'not_password12', captcha: 'captcha' });
+
+    expect(body).toEqual({ error: 'passwords do not match' });
+    expect(status).toBe(401);
+  });
+  test('log in user', async () => {
+    const { username, ...userLogin } = user;
+    const { status, body } = await userSession
+      .post('/api/user/login')
+      .send({ ...userLogin, captcha: 'captcha' });
+
+    expect(body).toEqual({ error: false });
+    expect(status).toBe(200);
   });
 });

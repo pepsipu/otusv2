@@ -1,15 +1,22 @@
 import joi from 'joi';
 import { IUser } from './index';
 
+const passwordComplexity = require('joi-password-complexity');
+
 const loginSchema = joi.object({
-  password: joi.string()
-    .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
-    .required(),
+  password: passwordComplexity({
+    min: 7,
+    max: 40,
+    lowerCase: 1,
+    upperCase: 0,
+    numeric: 1,
+    symbol: 0,
+  }).required(),
   email: joi.string()
     .email()
-    .max(30)
     .trim()
     .lowercase()
+    .max(50)
     .required(),
   captcha: joi.string()
     .required(),

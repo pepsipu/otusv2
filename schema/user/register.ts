@@ -21,7 +21,8 @@ const registerSchema = joi.object({
     .lowercase()
     .max(50)
     .required(),
-  captcha: joi.string(),
+  captcha: joi.string()
+    .required(),
 });
 
 export interface RegistrationData {
