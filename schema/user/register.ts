@@ -1,18 +1,25 @@
 import joi from 'joi';
 
+const passwordComplexity = require('joi-password-complexity');
+
 const registerSchema = joi.object({
   username: joi.string()
     .min(3)
-    .max(20)
+    .max(36)
     .required(),
-  password: joi.string()
-    .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
-    .required(),
+  password: passwordComplexity({
+    min: 7,
+    max: 40,
+    lowerCase: 1,
+    upperCase: 0,
+    numeric: 1,
+    symbol: 0,
+  }).required(),
   email: joi.string()
     .email()
     .trim()
     .lowercase()
-    .max(30)
+    .max(50)
     .required(),
   captcha: joi.string(),
 });

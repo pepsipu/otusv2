@@ -1,5 +1,4 @@
 import express from 'express';
-import chalk from 'chalk';
 import mongoose from 'mongoose';
 import helmet from 'helmet';
 import cors from 'cors';
@@ -12,11 +11,10 @@ import './config/env';
 import { expressLogger, logger } from './config/winston';
 import router from './routes/router';
 
-const app: express.Application = express();
-const port: number = +(process.env.PORT || 3000);
 const { MONGO_URI, SESSION_SECRET } = process.env;
 
-const run = async () => {
+export default async (): Promise<express.Application> => {
+  const app: express.Application = express();
   app.use(cors({
     origin,
   }));
@@ -50,7 +48,5 @@ const run = async () => {
   app.get('/*', (req, res) => {
     res.sendFile(path.join(__dirname, 'client/index.html'));
   });
-  await app.listen(port);
+  return app;
 };
-
-run().then(() => logger.info(`Express server has started listening on port ${chalk.red(port)}.`));
