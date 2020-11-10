@@ -73,3 +73,22 @@ describe('login user', () => {
     expect(status).toBe(200);
   });
 });
+
+describe('user profile', () => {
+  test('reject nonexistent profile', async () => {
+    const { status, body } = await userSession
+      .get('/api/user/profile/2e71777dff35158b955605a606c042e4ad0b3217');
+
+    expect(body).toEqual({ error: 'user does not exist' });
+    expect(status).toBe(404);
+  });
+
+  test('user profile is accurate', async () => {
+    const { status, body: { error, username } } = await userSession
+      .get(`/api/user/profile/${userSession.cookies.find(({ name }: any) => name === 'id').value}`);
+
+    expect(error).toBeFalsy();
+    expect(username).toBe(user.username);
+    expect(status).toBe(200);
+  });
+});
