@@ -33,7 +33,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build && rm -r ../build/client && cp -r build ../build/client",
+    "build": "react-scripts build && rm -r ../build/client ||: && cp -r build ../build/client",
 
     "test": "react-scripts test",
     "eject": "react-scripts eject"

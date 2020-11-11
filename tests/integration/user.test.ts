@@ -28,11 +28,11 @@ describe('register user', () => {
   });
   test('register user successfully', async () => {
     userSession = session(getApp());
-    const { status, body } = await userSession
+    const { status, body: { error } } = await userSession
       .post('/api/user/register')
       .send({ ...user, captcha: 'captcha' });
 
-    expect(body).toEqual({ error: false });
+    expect(error).toBeFalsy();
     expect(status).toBe(200);
   });
 });
@@ -46,10 +46,10 @@ describe('logout user', () => {
     expect(status).toBe(403);
   });
   test('logout user successfully', async () => {
-    const { status, body } = await userSession
+    const { status, body: { error } } = await userSession
       .post('/api/user/logout');
 
-    expect(body).toEqual({ error: false });
+    expect(error).toBeFalsy();
     expect(status).toBe(200);
   });
 });
@@ -65,11 +65,11 @@ describe('login user', () => {
   });
   test('log in user', async () => {
     const { username, ...userLogin } = user;
-    const { status, body } = await userSession
+    const { status, body: { error } } = await userSession
       .post('/api/user/login')
       .send({ ...userLogin, captcha: 'captcha' });
 
-    expect(body).toEqual({ error: false });
+    expect(error).toBeFalsy();
     expect(status).toBe(200);
   });
 });
