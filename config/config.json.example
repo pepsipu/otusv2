@@ -1,5 +1,5 @@
 {
-  "origin": "",
-  "recaptchaSecret": "",
+  "origin": "http://localhost:3000",
+  "recaptchaSecret": "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe",
   "bcryptRounds": 10
 }
