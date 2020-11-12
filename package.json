@@ -10,7 +10,7 @@
     "run": "npm run tsc && node build/server.js",
     "build": "npm run clean && npm run --prefix client build && npm run tsc",
     "buildClient": "npm run --prefix client build",
-    "test": "./node_modules/.bin/jest",
+    "test": "./node_modules/.bin/jest --runInBand",
     "lint": "./node_modules/.bin/eslint \"**/*.ts\" --ext .ts --ignore-pattern 'client' --ignore-pattern 'app' --ignore-pattern 'node_modules'"
   },
   "keywords": [],
