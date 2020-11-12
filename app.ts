@@ -19,7 +19,6 @@ export default async (): Promise<express.Application> => {
   }));
   app.use(helmet());
   app.use(express.json());
-
   await mongoose.connect(MONGO_URI as string, {
     useNewUrlParser: true,
     useUnifiedTopology: true,

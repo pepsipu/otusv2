@@ -12,6 +12,7 @@ const testApp = (): [() => Promise<void>, () => Promise<void>, () => express.App
     async () => {
       mongoServer = new MongoMemoryServer();
       process.env.MONGO_URI = await mongoServer.getUri();
+      process.env.SESSION_SECRET = uuid();
       app = await makeApp();
     },
     async () => {
