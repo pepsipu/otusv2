@@ -6,7 +6,6 @@ const port: number = +(process.env.PORT || 3000);
 
 const run = async () => {
   const app = await makeApp();
-  console.log('');
   await app.listen(port);
   logger.info(`Express server has started listening on port ${chalk.red(port)}.`);
 };
