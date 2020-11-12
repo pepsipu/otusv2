@@ -11,9 +11,8 @@ import './config/env';
 import { expressLogger, logger } from './config/winston';
 import router from './routes/router';
 
-const { MONGO_URI, SESSION_SECRET } = process.env;
-
 export default async (): Promise<express.Application> => {
+  const { MONGO_URI, SESSION_SECRET } = process.env;
   const app: express.Application = express();
   app.use(cors({
     origin,
@@ -21,7 +20,7 @@ export default async (): Promise<express.Application> => {
   app.use(helmet());
   app.use(express.json());
 
-  await mongoose.connect(MONGO_URI || '', {
+  await mongoose.connect(MONGO_URI as string, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
