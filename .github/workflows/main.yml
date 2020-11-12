@@ -30,7 +30,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-ver }}
       - name: install dependencies
-        run: npm install
+        run: npm install --save-dev
       - name: lint
         run: npm run lint
       - name: run tests
