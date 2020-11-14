@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import './Challenges.css';
+import { NavLink } from 'react-router-dom';
 import Check from '../ui/Check';
 
 // const getChallenges = async (): Promise<null> => {
@@ -16,8 +17,28 @@ export default () => {
     <>
       <div className="centerField">
         <h1>challenges</h1>
+        <small>play official challenges here</small>
+        <br />
         <div className="row w-75">
-          <div className="col-auto mx-auto componentContainer">
+          <div
+            className="col mx-auto componentContainer"
+            style={{
+              marginLeft: '0',
+              textAlign: 'center',
+            }}
+          >
+            <NavLink to="/home">
+              <small>make your own challenge &#65291;</small>
+            </NavLink>
+          </div>
+        </div>
+        <div className="row w-75">
+          <div
+            className="col-auto mx-auto componentContainer"
+            style={{
+              marginTop: '0',
+            }}
+          >
             <h5>filter</h5>
             <Check ref={onlyRanked}>ranked</Check>
             <Check ref={onlyUnranked}>unranked</Check>
@@ -37,7 +58,13 @@ export default () => {
             <Check ref={isPwn}>pwn</Check>
             <Check ref={isCrypto}>crypto</Check>
           </div>
-          <div className="col componentContainer" />
+          <div
+            className="col componentContainer"
+            style={{
+              marginTop: '0',
+              marginRight: '0',
+            }}
+          />
         </div>
       </div>
     </>

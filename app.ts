@@ -7,19 +7,17 @@ import MongoStore from 'connect-mongo';
 import path from 'path';
 import { origin } from './config/config.json';
 
-import './config/env';
 import { expressLogger, logger } from './config/winston';
 import router from './routes/router';
 
-export default async (): Promise<express.Application> => {
-  const { MONGO_URI, SESSION_SECRET } = process.env;
+export default async (mongoUri: string, sessionSecret: string): Promise<express.Application> => {
   const app: express.Application = express();
   app.use(cors({
     origin,
   }));
   app.use(helmet());
   app.use(express.json());
-  await mongoose.connect(MONGO_URI as string, {
+  await mongoose.connect(mongoUri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
@@ -29,7 +27,7 @@ export default async (): Promise<express.Application> => {
     process.abort();
   });
   app.use(session({
-    secret: SESSION_SECRET || '',
+    secret: sessionSecret,
     resave: false,
     saveUninitialized: true,
     store: new (MongoStore(session))({

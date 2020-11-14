@@ -11,9 +11,7 @@ const testApp = (): [() => Promise<void>, () => Promise<void>, () => express.App
   return [
     async () => {
       mongoServer = new MongoMemoryServer();
-      process.env.MONGO_URI = await mongoServer.getUri();
-      process.env.SESSION_SECRET = uuid();
-      app = await makeApp();
+      app = await makeApp(await mongoServer.getUri(), uuid());
     },
     async () => {
       await mongoose.disconnect();
