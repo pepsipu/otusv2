@@ -16,8 +16,9 @@ const categories = {
 
 export default () => {
   const { userId, category } = useParams();
-  const [{ username, emailHash }, setProfile]: [ProfileData, any] = useState({
+  const [{ username, country, emailHash }, setProfile]: [ProfileData, any] = useState({
     username: '',
+    country: '',
     emailHash: '',
   }) as [any, any];
 
@@ -78,6 +79,13 @@ export default () => {
               </div>
               <div className="col-auto">
                 <h3>{username}</h3>
+                <hr style={{
+                  padding: '0',
+                  margin: '0',
+                  background: '#f1f2eb',
+                }}
+                />
+                <img width="64" height="64" src={`https://www.countryflags.io/${country.toLowerCase()}/shiny/64.png`} />
               </div>
             </div>
           </div>
@@ -89,5 +97,6 @@ export default () => {
 
 interface ProfileData {
   username: string,
+  country: string,
   emailHash: string,
 }

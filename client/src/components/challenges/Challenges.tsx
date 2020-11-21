@@ -8,6 +8,7 @@ import Check from '../ui/Check';
 // };
 
 export default () => {
+  // we can make these modular but im pretty lazy so for now keep as separate
   const onlyRanked = useRef(null);
   const onlyUnranked = useRef(null);
 

@@ -43,7 +43,7 @@ a:hover {
     text-align: left;
 }
 
-input {
+input, .inputField {
     background: #2f2e2e;
     color: #f1f2eb;
     width: 300px;
@@ -54,6 +54,7 @@ input {
     font-size: 13pt;
     font-family: 'Roboto Mono', monospace;
 }
+
 
 input[type="checkbox"]:active {
     background:  #913434;

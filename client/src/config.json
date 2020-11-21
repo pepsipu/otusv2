@@ -1,4 +1,5 @@
 {
   "recaptcha": "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI",
+  "ipInfoToken": "30ad953fa78af9",
   "apiEndpoint": "http://localhost:3000/api"
 }

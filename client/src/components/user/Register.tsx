@@ -1,46 +1,83 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import ReCAPTCHA from 'react-google-recaptcha';
 import { toast } from 'react-toastify';
-import { recaptcha } from '../../config.json';
+import axios from 'axios';
+import countries from 'i18n-iso-countries';
+import { recaptcha, ipInfoToken } from '../../config.json';
 import { postWithErrors } from '../../util/requests';
+
+countries.registerLocale(require('i18n-iso-countries/langs/en.json'));
+
+// trust user with the ip, some users might not want their real country so we should
+// let them pick if they want tgo
+
+const register = async (
+  email: string, username: string, password: string, country: string, captcha: string,
+) => postWithErrors('user/register', {
+  email,
+  username,
+  password,
+  country,
+  captcha,
+});
 
 // ref is defined as { current: null }
 type Ref = { current: any };
 
-export default (props: { cookies: any }) => {
+export default () => {
   const [, forceUpdate] = useState();
   const [captcha, setCaptcha] = useState('');
 
   const history = useHistory();
 
-  const emailInput: Ref = useRef(null);
-  const usernameInput: Ref = useRef(null);
-  const passwordInput: Ref = useRef(null);
-  const captchaInput: Ref = useRef(null);
+  const inputRefs = {
+    email: useRef(null),
+    username: useRef(null),
+    password: useRef(null),
+    country: useRef(null),
+  };
 
-  const email = emailInput.current?.value;
-  const username = usernameInput.current?.value;
-  const password = passwordInput.current?.value;
+  const captchaRef = useRef(null);
 
-  // const fieldsFilled = [emailInput, usernameInput, passwordInput].map((i) => i.current?.value).every((v) => v)
-  const filled = email && username && password && captcha;
+  const inputs = Object.fromEntries(Object.entries(inputRefs).map(
+    ([inputName, input]: [any, any]) => [inputName, input.current?.value],
+  ));
+
+  const {
+    email, username, password, country,
+  } = inputs;
+
+  const filled = Object.values(inputs).every((v: any) => v) && captcha;
   return (
     <>
       <div className="centerField">
         <h1>register</h1>
         <small>please dont spam new accounts!</small>
         <br />
-        <input placeholder="email" ref={emailInput} onInput={forceUpdate} />
-        <input placeholder="username" ref={usernameInput} onInput={forceUpdate} />
-        <input placeholder="password" type="password" ref={passwordInput} onInput={forceUpdate} />
+        <input placeholder="email" ref={inputRefs.email} onInput={forceUpdate} />
+        <input placeholder="username" ref={inputRefs.username} onInput={forceUpdate} />
+        <input placeholder="password" type="password" ref={inputRefs.password} onInput={forceUpdate} />
+        <select
+          className="custom-select inputField"
+          ref={inputRefs.country}
+          defaultValue="US"
+        >
+          {Object.keys(countries.getAlpha2Codes()).map(
+            (countryCode) => (
+              <option value={countryCode} key={countryCode}>
+                {countries.getName(countryCode, 'en')}
+              </option>
+            ),
+          )}
+        </select>
         <br />
         <ReCAPTCHA
           sitekey={recaptcha}
           onChange={(token) => setCaptcha(token ?? '')}
           theme="dark"
-          ref={captchaInput}
+          ref={captchaRef}
         />
         <br />
         <motion.button
@@ -52,21 +89,14 @@ export default (props: { cookies: any }) => {
             fontSize: '12pt',
             background: filled ? '#f05d5e' : '#2d2d2d',
           }}
-          onClick={() => {
+          onClick={async () => {
             if (filled) {
-              postWithErrors('user/register', {
-                email,
-                username,
-                password,
-                captcha,
-              })
-                .then((registered) => {
-                  if (registered) {
-                    toast.success('registered!');
-                    history.push('/home');
-                  }
-                });
-              captchaInput.current?.reset();
+              const registered = await register(email, username, password, country, captcha);
+              if (registered) {
+                toast.success('registered!');
+                history.push('/home');
+              }
+              (captchaRef.current as any)?.reset();
             }
           }}
         >

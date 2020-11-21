@@ -17,7 +17,7 @@ describe('register user', () => {
     badUser.email = 'not-email';
     const { status, body } = await request(app)
       .post('/api/user/register')
-      .send({ ...badUser, captcha: 'captcha' });
+      .send({ ...badUser, captcha: 'captcha', country: 'US' });
 
     expect(body).toEqual({
       error: [
@@ -30,7 +30,7 @@ describe('register user', () => {
     userSession = session(getApp());
     const { status, body: { error } } = await userSession
       .post('/api/user/register')
-      .send({ ...user, captcha: 'captcha' });
+      .send({ ...user, captcha: 'captcha', country: 'US' });
 
     expect(error).toBeFalsy();
     expect(status).toBe(200);

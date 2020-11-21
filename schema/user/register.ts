@@ -1,4 +1,5 @@
 import joi from 'joi';
+import countries from 'i18n-iso-countries';
 
 const passwordComplexity = require('joi-password-complexity');
 
@@ -23,13 +24,22 @@ const registerSchema = joi.object({
     .required(),
   captcha: joi.string()
     .required(),
+  country: joi.string()
+    .custom((country: string) => {
+      if (!countries.isValid(country)) {
+        throw new Error('country is not a valid country');
+      }
+      return country;
+    }, 'country code validation')
+    .required(),
 });
 
 export interface RegistrationData {
   username: string,
   password: string,
   email: string,
-  captcha: string
+  country: string,
+  captcha: string,
 }
 
 export { registerSchema };

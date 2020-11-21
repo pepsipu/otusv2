@@ -18,6 +18,8 @@
     "bootstrap": "^4.5.3",
     "eslint-config-airbnb-typescript": "^7.2.1",
     "framer-motion": "^2.7.5",
+    "i18n-iso-countries": "^6.2.2",
+    "jsonp": "^0.2.1",
     "react": "^16.13.1",
     "react-bootstrap": "^1.4.0",
     "react-cookie": "^4.0.3",
@@ -34,7 +36,6 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build && rm -r ../build/client ||: && cp -r build ../build/client",
-
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -53,5 +54,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/jsonp": "^0.2.0"
   }
 }

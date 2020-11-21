@@ -15,13 +15,13 @@ export default {
         return;
       }
       const {
-        username, email, password, captcha,
+        username, email, password, country, captcha,
       }: RegistrationData = value;
       if (!await validRecaptcha(captcha)) {
         raiseError('bad captcha', 403);
         return;
       }
-      const user = await createUser(username, password, email);
+      const user = await createUser(username, password, email, country);
       if (!user) {
         raiseError('duplicate email or username', 403);
         return;
