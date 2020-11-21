@@ -9,12 +9,12 @@ const userSchema = new mongoose.Schema({
   country: String,
   passwordHash: String,
   emailHash: String,
-  publicId: String,
   badges: [{
     color: String,
     text: String,
   }],
-  rank: Number,
+
+  modes: [],
 });
 
 export interface IUser extends Document {
@@ -23,9 +23,7 @@ export interface IUser extends Document {
   country: string,
   passwordHash: string,
   emailHash: string
-  publicId: string,
   badges: { color: string, text: string }[],
-  rank: number,
 }
 
 const User = mongoose.model<IUser>('User', userSchema);
@@ -53,7 +51,6 @@ const createUser = async (
     emailHash: createHash('md5').update(email).digest('hex'),
     badges: [],
   });
-  user.publicId = createHash('sha1').update(user.id).digest('hex');
   await user.save();
   return user;
 };

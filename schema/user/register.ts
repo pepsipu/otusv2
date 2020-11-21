@@ -31,6 +31,7 @@ const registerSchema = joi.object({
       }
       return country;
     }, 'country code validation')
+    .lowercase()
     .required(),
 });
 

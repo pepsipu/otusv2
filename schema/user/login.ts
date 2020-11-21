@@ -33,11 +33,11 @@ const login = (req: any, res: any, user: IUser): boolean => {
     return false;
   }
   const {
-    id, publicId, username, email,
+    id, username, email,
   } = user;
   req.session.userId = id;
   res.status(200);
-  res.cookie('id', publicId);
+  res.cookie('id', id);
   res.cookie('username', username);
   res.cookie('email', email);
   res.send({ error: false });

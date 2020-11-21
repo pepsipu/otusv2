@@ -11,7 +11,6 @@ const challengeSchema = new mongoose.Schema({
     timestamp: Date,
   }],
   points: Number,
-  publicId: String,
 });
 
 interface IChallenge extends Document {
@@ -25,7 +24,6 @@ interface IChallenge extends Document {
     timestamp: Date,
   }[],
   points: number
-  publicId: string,
 }
 
 const Challenge = mongoose.model<IChallenge>('Challenge', challengeSchema);

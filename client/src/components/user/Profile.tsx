@@ -85,7 +85,7 @@ export default () => {
                   background: '#f1f2eb',
                 }}
                 />
-                <img width="64" height="64" src={`https://www.countryflags.io/${country.toLowerCase()}/shiny/64.png`} />
+                <img width="64" height="64" src={`https://www.countryflags.io/${country}/shiny/64.png`} />
               </div>
             </div>
           </div>

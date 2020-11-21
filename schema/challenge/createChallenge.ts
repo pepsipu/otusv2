@@ -1,5 +1,4 @@
 import { string, object, array } from 'joi';
-import { createHash } from 'crypto';
 import { Challenge, IChallenge } from './challenge';
 
 const createChallengeSchema = object({
@@ -23,7 +22,6 @@ const createChallenge = async ({
     solves: [],
     points: -1,
   });
-  challenge.publicId = createHash('sha1').update(challenge.id).digest('hex');
   await challenge.save();
   return challenge;
 };

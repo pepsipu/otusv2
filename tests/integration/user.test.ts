@@ -75,9 +75,17 @@ describe('login user', () => {
 });
 
 describe('user profile', () => {
+  test('reject invalid profile', async () => {
+    const { status, body } = await userSession
+      .get('/api/user/profile/nice');
+
+    expect(body).toEqual({ error: 'user id is invalid' });
+    expect(status).toBe(400);
+  });
+
   test('reject nonexistent profile', async () => {
     const { status, body } = await userSession
-      .get('/api/user/profile/2e71777dff35158b955605a606c042e4ad0b3217');
+      .get('/api/user/profile/537eed02ed345b2e039652d2');
 
     expect(body).toEqual({ error: 'user does not exist' });
     expect(status).toBe(404);
