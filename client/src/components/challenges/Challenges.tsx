@@ -28,7 +28,7 @@ export default () => {
               textAlign: 'center',
             }}
           >
-            <NavLink to="/home">
+            <NavLink to="/create/challenge">
               <small>make your own challenge &#65291;</small>
             </NavLink>
           </div>

@@ -59,3 +59,8 @@ input, .inputField {
 input[type="checkbox"]:active {
     background:  #913434;
 }
+
+
+.highlight:hover {
+    text-decoration: underline;
+}

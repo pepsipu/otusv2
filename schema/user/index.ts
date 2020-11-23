@@ -7,14 +7,25 @@ const userSchema = new mongoose.Schema({
   username: String,
   email: String,
   country: String,
+
   passwordHash: String,
   emailHash: String,
+
   badges: [{
     color: String,
     text: String,
   }],
 
-  modes: [],
+  ctf: {
+    // weighted average of all points scored from solving challenges
+    pp: Number,
+    solves: [{
+      challenge: mongoose.Types.ObjectId,
+      timestamp: Date,
+      // rank when this challenge was solved, useful for generating rank vs time graph
+      position: Number,
+    }],
+  },
 });
 
 export interface IUser extends Document {

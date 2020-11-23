@@ -19,7 +19,6 @@
     "eslint-config-airbnb-typescript": "^7.2.1",
     "framer-motion": "^2.7.5",
     "i18n-iso-countries": "^6.2.2",
-    "jsonp": "^0.2.1",
     "react": "^16.13.1",
     "react-bootstrap": "^1.4.0",
     "react-cookie": "^4.0.3",
@@ -54,8 +53,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "@types/jsonp": "^0.2.0"
   }
 }
