@@ -7,6 +7,7 @@ require('dotenv').config();
 const { MONGO_URI } = process.env;
 
 const run = async () => {
+  mongoose.set('debug', true);
   await mongoose.connect(MONGO_URI || '', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -17,7 +18,7 @@ const run = async () => {
     process.abort();
   });
   const adminConsole = repl.start('otus console> ');
-  adminConsole.context.user = user;
+  Object.assign(adminConsole.context, user);
 };
 
 run().then(() => {});

@@ -19,6 +19,7 @@
     "eslint-config-airbnb-typescript": "^7.2.1",
     "framer-motion": "^2.7.5",
     "i18n-iso-countries": "^6.2.2",
+    "js-yaml": "^3.14.0",
     "react": "^16.13.1",
     "react-bootstrap": "^1.4.0",
     "react-cookie": "^4.0.3",
@@ -29,6 +30,7 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "^3.4.3",
     "react-toastify": "^6.0.9",
+    "react-tooltip": "^4.2.11",
     "typescript": "^3.7.5",
     "vanta": "^0.5.19"
   },

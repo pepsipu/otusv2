@@ -12,8 +12,10 @@ const userSchema = new mongoose.Schema({
   emailHash: String,
 
   badges: [{
+    backgroundColor: String,
     color: String,
     text: String,
+    tooltip: String,
   }],
 
   ctf: {
@@ -34,7 +36,11 @@ export interface IUser extends Document {
   country: string,
   passwordHash: string,
   emailHash: string
-  badges: { color: string, text: string }[],
+  badges: { backgroundColor: string, color: string, text: string, tooltip: string }[],
+  ctf: {
+    pp: number,
+    solves: { challenge: mongoose.Types.ObjectId, timestamp: Date, position: number }[]
+  }
 }
 
 const User = mongoose.model<IUser>('User', userSchema);
@@ -61,6 +67,10 @@ const createUser = async (
     passwordHash,
     emailHash: createHash('md5').update(email).digest('hex'),
     badges: [],
+    ctf: {
+      pp: 0,
+      solves: [],
+    },
   });
   await user.save();
   return user;

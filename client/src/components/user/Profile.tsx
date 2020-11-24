@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { NavLink, useParams } from 'react-router-dom';
 import Gravatar from 'react-gravatar';
+import countries from 'i18n-iso-countries';
+import ReactTooltip from 'react-tooltip';
 import { getWithErrors } from '../../util/requests';
 
 const categories = {
@@ -14,12 +16,24 @@ const categories = {
   },
 };
 
+const alternateCountries = (code: string) => {
+  switch (code) {
+    case 'us':
+      return 'United States';
+    default:
+      return countries.getName(code, 'en');
+  }
+};
+
 export default () => {
   const { userId, category } = useParams();
-  const [{ username, country, emailHash }, setProfile]: [ProfileData, any] = useState({
+  const [{
+    username, country, emailHash, badges, ctf,
+  }, setProfile]: [ProfileData, any] = useState({
     username: '',
     country: '',
     emailHash: '',
+    badges: [],
   }) as [any, any];
 
   useEffect(() => {
@@ -28,6 +42,7 @@ export default () => {
 
   return (
     <>
+      <ReactTooltip />
       <div className="centerField">
         <div
           className="w-75 componentContainer"
@@ -79,13 +94,56 @@ export default () => {
               </div>
               <div className="col-auto">
                 <h3>{username}</h3>
-                <hr style={{
-                  padding: '0',
-                  margin: '0',
-                  background: '#f1f2eb',
+                <div style={{
+                  paddingTop: '4px',
                 }}
-                />
-                <img width="64" height="64" src={`https://www.countryflags.io/${country}/shiny/64.png`} />
+                >
+                  <hr style={{
+                    padding: '0',
+                    margin: '0',
+                    background: '#f1f2eb',
+                  }}
+                  />
+                  <div
+                    className="row"
+                    style={{
+                      padding: '15px',
+                      paddingTop: '10px',
+                      paddingBottom: '0px',
+                    }}
+                  >
+                    {/* thank you peppy you are so cute */}
+                    <img
+                      style={{
+                        paddingRight: '8px',
+                      }}
+                      width="40px"
+                      alt="osu flag"
+                      src={`https://osu.ppy.sh/images/flags/${country.toUpperCase()}.png`}
+                    />
+                    <small>{alternateCountries(country)}</small>
+                  </div>
+                </div>
+                <div>
+                  <br />
+                  {badges.map((badge) => (
+                    <>
+                      <ReactTooltip effect="solid" />
+                      <span
+                        style={{
+                          background: badge.backgroundColor,
+                          color: badge.color,
+                          padding: '8px',
+                          marginRight: '16px',
+                          marginLeft: '-8px',
+                        }}
+                        data-tip={badge.tooltip}
+                      >
+                        {badge.text}
+                      </span>
+                    </>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
@@ -99,4 +157,9 @@ interface ProfileData {
   username: string,
   country: string,
   emailHash: string,
+  badges: { backgroundColor: string, color: string, text: string, tooltip: string }[],
+  ctf: {
+    pp: number,
+    solves: { challenge: string, timestamp: Date, position: number }[]
+  }
 }

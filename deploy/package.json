@@ -4,7 +4,7 @@
   "description": "Admin console for deploying and other misc tasks.",
   "main": "app.js",
   "scripts": {
-    "run": "node --experimental-repl-await app.js"
+    "start": "node --experimental-repl-await app.js"
   },
   "author": "",
   "license": "ISC",

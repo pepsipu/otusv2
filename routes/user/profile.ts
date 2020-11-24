@@ -18,9 +18,11 @@ export default {
         raiseError('user does not exist', 404);
         return;
       }
-      const { username, emailHash, country } = user;
+      const {
+        username, emailHash, country, badges, ctf,
+      } = user;
       res.send({
-        username, emailHash, country, error: false,
+        username, emailHash, country, badges, ctf, error: false,
       });
     });
   }],

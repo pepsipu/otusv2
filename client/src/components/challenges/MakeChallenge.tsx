@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
 import { toast } from 'react-toastify';
 import { motion } from 'framer-motion';
+import jsYaml from 'js-yaml';
 import { recaptcha } from '../../config.json';
 
 export default () => {
@@ -9,7 +10,7 @@ export default () => {
   const captchaRef: any = useRef(null);
 
   const [captcha, setCaptcha] = useState('');
-  const [file, setFile] = useState({ name: 'no file selected' });
+  const [file, setFile]: [any, any] = useState({ name: 'no file selected' });
 
   const filled = captcha && file.name !== 'no file selected';
   return (
@@ -58,7 +59,7 @@ export default () => {
           <div
             className="centerField"
             style={{
-              padding: '10px',
+              padding: '20px',
             }}
           >
             <ReCAPTCHA
@@ -79,8 +80,13 @@ export default () => {
             }}
             onClick={async () => {
               if (filled) {
-                (captchaRef.current as any)?.reset();
-                setCaptcha('');
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                  const challenge = jsYaml.load(event.target?.result as string);
+                  (captchaRef.current as any)?.reset();
+                  setCaptcha('');
+                };
+                reader.readAsText(file, 'UTF-8');
               }
             }}
           >
