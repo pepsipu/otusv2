@@ -3,9 +3,13 @@ import ReCAPTCHA from 'react-google-recaptcha';
 import { toast } from 'react-toastify';
 import { motion } from 'framer-motion';
 import jsYaml from 'js-yaml';
+import { useHistory } from 'react-router';
 import { recaptcha } from '../../config.json';
+import { postWithErrors } from '../../util/requests';
 
 export default () => {
+  const history = useHistory();
+
   const fileRef: any = useRef(null);
   const captchaRef: any = useRef(null);
 
@@ -83,6 +87,12 @@ export default () => {
                 const reader = new FileReader();
                 reader.onload = (event) => {
                   const challenge = jsYaml.load(event.target?.result as string);
+                  postWithErrors('/challenge/create', { ...challenge, captcha }).then(({ challenge }) => {
+                    if (challenge) {
+                      toast.success('challenge created!');
+                      history.push(`/challenge/${challenge}`);
+                    }
+                  });
                   (captchaRef.current as any)?.reset();
                   setCaptcha('');
                 };

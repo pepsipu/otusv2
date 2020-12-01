@@ -25,16 +25,15 @@ export default {
         raiseError('not logged in', 403);
         return;
       }
-      const user = await User.findById(req.session.userId);
       const challenge = await createChallenge({
-        author: user?.username,
+        author: req.session.userId,
         ...challengeInformation,
-      }).catch(() => false);
+      }).catch(() => null);
       if (!challenge) {
         raiseError('could not make challenge', 400);
         return;
       }
-      res.send({ error: false });
+      res.send({ challenge: challenge.id, error: false });
     });
   }],
 };

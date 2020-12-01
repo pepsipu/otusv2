@@ -3,9 +3,8 @@ import { Challenge, IChallenge } from './challenge';
 
 const createChallengeSchema = object({
   name: string().required(),
-  author: string().required(),
   flag: string().required(),
-  categories: array().items(string().required()),
+  categories: array().items(string().required()).required(),
   description: string().required(),
   captcha: string().required(),
 });

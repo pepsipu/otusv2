@@ -2,12 +2,12 @@ import mongoose, { Document } from 'mongoose';
 
 const challengeSchema = new mongoose.Schema({
   name: String,
-  author: String,
+  author: mongoose.Types.ObjectId,
   flag: String,
   categories: [String],
   description: String,
   solves: [{
-    playerId: String,
+    playerId: mongoose.Types.ObjectId,
     timestamp: Date,
   }],
   points: Number,
@@ -15,15 +15,15 @@ const challengeSchema = new mongoose.Schema({
 
 interface IChallenge extends Document {
   name: string,
-  author: string,
+  author: mongoose.Types.ObjectId,
   flag: string,
   categories: string[],
   description: string,
   solves: {
-    playerId: string,
+    playerId: mongoose.Types.ObjectId,
     timestamp: Date,
   }[],
-  points: number
+  points: number,
 }
 
 const Challenge = mongoose.model<IChallenge>('Challenge', challengeSchema);
