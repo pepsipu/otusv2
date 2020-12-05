@@ -1,5 +1,5 @@
 import { string, object, array } from 'joi';
-import { Challenge, IChallenge } from './challenge';
+import { Challenge, IChallenge } from '.';
 
 const createChallengeSchema = object({
   name: string().required(),

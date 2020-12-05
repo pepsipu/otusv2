@@ -1,7 +1,7 @@
 import React, { MutableRefObject } from 'react';
 
 export default (props: CheckProps) => {
-  const { ref, children } = props;
+  const { trueRef, children } = props;
   return (
     <div
       className="row"
@@ -12,7 +12,7 @@ export default (props: CheckProps) => {
     >
       <input
         type="checkbox"
-        ref={ref}
+        ref={trueRef}
         style={{
           width: '13px',
         }}
@@ -24,6 +24,6 @@ export default (props: CheckProps) => {
 };
 
 interface CheckProps {
-  ref: MutableRefObject<null>,
+  trueRef: MutableRefObject<null>,
   children: string
 }

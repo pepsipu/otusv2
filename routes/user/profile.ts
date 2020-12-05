@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import { User } from '../../schema/user';
 import { createRaiseError } from '../util';
+import { Challenge } from '../../schema/challenge';
 
 export default {
   routes: [(router: express.Router) => {
@@ -21,8 +22,13 @@ export default {
       const {
         username, emailHash, country, badges, ctf,
       } = user;
+      const challenges = (await Challenge.find({ author: user.id })).map(({
+        name, categories, description, points,
+      }) => ({
+        name, categories, description, points,
+      }));
       res.send({
-        username, emailHash, country, badges, ctf, error: false,
+        username, emailHash, country, badges, ctf, challenges, error: false,
       });
     });
   }],

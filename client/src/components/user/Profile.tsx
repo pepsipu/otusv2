@@ -4,6 +4,7 @@ import Gravatar from 'react-gravatar';
 import countries from 'i18n-iso-countries';
 import ReactTooltip from 'react-tooltip';
 import { getWithErrors } from '../../util/requests';
+import { IChallenge, Challenge } from '../challenges/Challenge';
 
 const categories = {
   ctf: {
@@ -28,12 +29,13 @@ const alternateCountries = (code: string) => {
 export default () => {
   const { userId, category } = useParams();
   const [{
-    username, country, emailHash, badges, ctf,
+    username, country, emailHash, badges, ctf, challenges,
   }, setProfile]: [ProfileData, any] = useState({
     username: '',
     country: '',
     emailHash: '',
     badges: [],
+    challenges: [],
   }) as [any, any];
 
   useEffect(() => {
@@ -43,7 +45,12 @@ export default () => {
   return (
     <>
       <ReactTooltip />
-      <div className="centerField">
+      <div
+        className="centerField"
+        style={{
+          paddingBottom: '0',
+        }}
+      >
         <div
           className="w-75 componentContainer"
           style={{
@@ -149,6 +156,16 @@ export default () => {
           </div>
         </div>
       </div>
+      <div className="centerField">
+        <div
+          className="w-75 componentContainer"
+          style={{
+            padding: 0,
+          }}
+        >
+          {challenges.map((challenge) => <Challenge {...challenge} />)}
+        </div>
+      </div>
     </>
   );
 };
@@ -161,5 +178,6 @@ interface ProfileData {
   ctf: {
     pp: number,
     solves: { challenge: string, timestamp: Date, position: number }[]
-  }
+  },
+  challenges: IChallenge[],
 }

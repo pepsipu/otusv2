@@ -4,3 +4,4 @@ parserOptions:
   project: './client/tsconfig.json'
 rules:
   max-len: off
+  react/jsx-props-no-spreading: off

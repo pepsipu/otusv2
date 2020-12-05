@@ -15,59 +15,69 @@ export default () => {
   const isPwn = useRef(null);
   const isCrypto = useRef(null);
   return (
-    <>
-      <div className="centerField">
-        <h1>challenges</h1>
-        <small>play official challenges here</small>
-        <br />
-        <div className="row w-75">
-          <div
-            className="col mx-auto componentContainer"
-            style={{
-              marginLeft: '0',
-              textAlign: 'center',
-            }}
-          >
-            <NavLink to="/create/challenge">
-              <small>make your own challenge &#65291;</small>
-            </NavLink>
-          </div>
-        </div>
-        <div className="row w-75">
-          <div
-            className="col-auto mx-auto componentContainer"
-            style={{
-              marginTop: '0',
-            }}
-          >
-            <h5>filter</h5>
-            <Check ref={onlyRanked}>ranked</Check>
-            <Check ref={onlyUnranked}>unranked</Check>
-            <hr style={{
-              background: 'white',
-              marginTop: '10px',
-              marginBottom: '10px',
-            }}
-            />
-            <p style={{
-              marginTop: '10px',
-              marginBottom: '5px',
-            }}
-            >
-              categories
-            </p>
-            <Check ref={isPwn}>pwn</Check>
-            <Check ref={isCrypto}>crypto</Check>
-          </div>
-          <div
-            className="col componentContainer"
-            style={{
-              marginTop: '0',
-              marginRight: '0',
-            }}
-          />
+    <div className="centerField">
+      <h1>challenges</h1>
+      <small>play official challenges here</small>
+      <br />
+      <div
+        className="row w-75"
+        style={{
+          margin: '10px',
+        }}
+      >
+        <div
+          className="col mx-auto componentContainer"
+          style={{
+            textAlign: 'center',
+          }}
+        >
+          <NavLink to="/create/challenge">
+            <small>make your own challenge &#65291;</small>
+          </NavLink>
         </div>
       </div>
-    </>
+      <div className="row w-75">
+        <div
+          className="col-auto mx-auto componentContainer"
+          style={{
+            margin: '10px',
+            marginTop: '0',
+          }}
+        >
+          <h5>filter</h5>
+          <Check trueRef={onlyRanked}>ranked</Check>
+          <Check trueRef={onlyUnranked}>unranked</Check>
+          <hr style={{
+            background: 'white',
+            marginTop: '10px',
+            marginBottom: '10px',
+          }}
+          />
+          <p style={{
+            marginTop: '10px',
+            marginBottom: '5px',
+          }}
+          >
+            categories
+          </p>
+          <Check trueRef={isPwn}>pwn</Check>
+          <Check trueRef={isCrypto}>crypto</Check>
+        </div>
+        <div
+          className="col"
+          style={{
+            margin: '10px',
+            marginTop: '0',
+            marginRight: '0',
+            padding: '0',
+          }}
+        >
+          <div
+            className="componentContainer"
+          />
+        </div>
+
+      </div>
+    </div>
   );
 };

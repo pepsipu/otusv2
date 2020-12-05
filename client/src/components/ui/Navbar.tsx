@@ -80,14 +80,14 @@ export default withCookies((props: { paths: string[][], userOptions: string[][] 
             </div>
             <Dropdown.Divider />
             {[...userOptions, ['profile', `/profile/${id}/ctf`]].map(([name, path]) => (
-              <>
-                <NavLink key={name} to={path} style={{ textDecoration: 'none' }}>
+              <React.Fragment key={path}>
+                <NavLink to={path} style={{ textDecoration: 'none' }}>
                   <span className="dropdownItem">
                     {name}
                   </span>
                 </NavLink>
                 <br />
-              </>
+              </React.Fragment>
             ))}
           </Dropdown.Menu>
         </Dropdown>
