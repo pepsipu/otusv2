@@ -4,23 +4,32 @@ import ReactMarkdown from 'react-markdown';
 const Challenge = ({
   name, description, categories, points,
 }: IChallenge) => (
-  <div
-    className="col componentContainer"
-    style={{
-      padding: '20px',
-    }}
-  >
+  <>
     <div className="row">
       <div className="col">
         <h6>{name}</h6>
       </div>
       <div className="col-auto">
         <p>
-          {points !== -1 && <small>{`${points} points`}</small>}
+          {points !== -1 && <p>{`${points} points`}</p>}
         </p>
       </div>
     </div>
     <small>pepsipu</small>
+    <hr style={{
+      marginTop: '10px',
+      marginBottom: '10px',
+      backgroundColor: '#f1f2eb',
+    }}
+    />
+    <div style={{
+      fontSize: '11pt',
+    }}
+    >
+      <ReactMarkdown>
+        {description}
+      </ReactMarkdown>
+    </div>
     <div
       className="input-group mb-3"
       style={{
@@ -63,7 +72,7 @@ const Challenge = ({
         {category}
       </small>
     ))}
-  </div>
+  </>
 );
 
 export interface IChallenge {

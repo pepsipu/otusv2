@@ -156,14 +156,30 @@ export default () => {
           </div>
         </div>
       </div>
-      <div className="centerField">
+      <div
+        className="centerField"
+        style={{
+          paddingTop: '0px',
+        }}
+      >
         <div
-          className="w-75 componentContainer"
+          className="w-75"
           style={{
             padding: 0,
           }}
         >
-          {challenges.map((challenge) => <Challenge {...challenge} />)}
+          {challenges.map((challenge) => (
+            <div
+              className="componentContainerRound"
+              style={{
+                padding: '20px',
+                marginTop: '20px',
+                marginBottom: '20px',
+              }}
+            >
+              <Challenge {...challenge} />
+            </div>
+          ))}
         </div>
       </div>
     </>
