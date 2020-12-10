@@ -5,10 +5,13 @@ import cors from 'cors';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
 import path from 'path';
-import { origin } from './config/config.json';
+import redis from 'redis';
 
+import { origin } from './config/config.json';
 import { expressLogger, logger } from './config/winston';
 import router from './routes/router';
+import { User } from './schema/user';
+import { loadLeaderboard } from './schema/leaderboard';
 
 export default async (mongoUri: string, sessionSecret: string): Promise<express.Application> => {
   const app: express.Application = express();
@@ -26,6 +29,9 @@ export default async (mongoUri: string, sessionSecret: string): Promise<express.
     logger.error(`Mongoose error while connecting to MongoDB: ${err}`);
     process.abort();
   });
+
+  await loadLeaderboard();
+
   app.use(session({
     secret: sessionSecret,
     resave: false,
@@ -44,5 +50,6 @@ export default async (mongoUri: string, sessionSecret: string): Promise<express.
   app.get('/*', (req, res) => {
     res.sendFile(path.join(__dirname, 'client/index.html'));
   });
+
   return app;
 };

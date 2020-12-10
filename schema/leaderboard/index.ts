@@ -3,3 +3,24 @@
 *   load the leaderboard into the redis sortedset. we'd need to load every user and their pp
 * TODO updateUser(user_id, new_pp):
 *   user changes pp and scoreboard needs to be updated with new ranks */
+
+import redis from 'redis';
+import { Types } from 'mongoose';
+import { IUser, User } from '../user';
+
+const loadLeaderboard = async () => {
+  const client = redis.createClient();
+  /* this isn't good. mapping the array takes O(n) time, so if there was a way during mongos
+  fetch that would be better, but i don't know it */
+  const users = await User.find({}, 'ctf.pp');
+  client.zadd('scoreboard', ...users.reduce(
+    ((acc: any[], { ctf: { pp }, _id: id }: IUser) => [...acc, pp, id.toString()]) as any,
+    [],
+  ));
+};
+
+const updateUser = (id: Types.ObjectId, pp: number) => {
+
+};
+
+export { loadLeaderboard, updateUser };

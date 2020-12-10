@@ -43,12 +43,14 @@
     "logform": "^2.1.2",
     "mongoose": "^5.10.2",
     "morgan": "^1.10.0",
+    "redis": "^3.0.2",
     "winston": "^3.2.1"
   },
   "devDependencies": {
     "@jest/globals": "^26.6.2",
     "@types/jest": "^26.0.15",
     "@types/joi-password-complexity": "^3.1.0",
+    "@types/redis": "^2.8.28",
     "@types/supertest": "^2.0.10",
     "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "^2.34.0",
