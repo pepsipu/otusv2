@@ -10,7 +10,6 @@ import redis from 'redis';
 import { origin } from './config/config.json';
 import { expressLogger, logger } from './config/winston';
 import router from './routes/router';
-import { User } from './schema/user';
 import { loadLeaderboard } from './schema/leaderboard';
 
 export default async (mongoUri: string, sessionSecret: string): Promise<express.Application> => {
@@ -30,7 +29,12 @@ export default async (mongoUri: string, sessionSecret: string): Promise<express.
     process.abort();
   });
 
-  await loadLeaderboard();
+  app.locals.redis = {
+    scoreboard: redis.createClient(),
+    disconnect: () => app.locals.redis.scoreboard.quit(),
+  };
+
+  await loadLeaderboard(app.locals.redis.scoreboard);
 
   app.use(session({
     secret: sessionSecret,

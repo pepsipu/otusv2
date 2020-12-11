@@ -16,6 +16,7 @@ const testApp = (): [() => Promise<void>, () => Promise<void>, () => express.App
     async () => {
       await mongoose.disconnect();
       await mongoServer.stop();
+      app.locals.redis.disconnect();
     },
     () => app,
   ];
