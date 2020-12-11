@@ -13,10 +13,9 @@ const loadLeaderboard = async () => {
   /* this isn't good. mapping the array takes O(n) time, so if there was a way during mongos
   fetch that would be better, but i don't know it */
   const users = await User.find({}, 'ctf.pp');
-  if (users) {
-    client.zadd('scoreboard', ...users.reduce(
-      ((acc: any[], { ctf: { pp }, _id: id }: IUser) => [...acc, pp, id.toString()]) as any,
-      [],
+  if (users.length) {
+    client.zadd('scoreboard', ...users.map(
+      ({ ctf: { pp }, _id: id }: IUser) => [pp, id.toString()] as any,
     ));
   }
 };

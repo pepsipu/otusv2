@@ -44,7 +44,6 @@ export default () => {
 
   return (
     <>
-      <ReactTooltip />
       <div
         className="centerField"
         style={{
@@ -182,6 +181,11 @@ export default () => {
           ))}
         </div>
       </div>
+      <div id="tooltip-container">
+        <ReactTooltip />
+
+      </div>
+
     </>
   );
 };
