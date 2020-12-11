@@ -1,10 +1,4 @@
-# Otus
-Linux scoring engine for CyberPatriot.
+<img src="https://github.com/pepsipu/otusv2/blob/master/client/src/img/otus_engine_2.svg">
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/pepsipu/otusv2/CI?style=flat-square)
 
-/ is the website
-
-/client is website front end
-
-/app is engine itself
-
-/app/client is ui for engine (scoring report and controls and such)
+Otus is a wargame site to play CTF challenges and secure linux images.
