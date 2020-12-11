@@ -20,7 +20,7 @@ jobs:
       matrix:
         node-ver: [14.x, 15.x]
 
-  services:
+    services:
       redis:
         image: redis
         options: >-
@@ -30,21 +30,22 @@ jobs:
           --health-retries 5
         ports:
           - 6379:6379
-  # Steps represent a sequence of tasks that will be executed as part of the job
-  steps:
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - uses: actions/checkout@v2
 
-    - name: use node ${{ matrix.node-ver }}
-      uses: actions/setup-node@v2.1.2
-      with:
-        node-version: ${{ matrix.node-ver }}
-    - name: install dependencies
-      run: npm ci
-    - name: lint
-      run: 'npm run lint ||:'
-    - name: use example config
-      run: |
-        mv ./config/config.json.example ./config/config.json
-    - name: run tests
-      run: npm test
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - name: use node ${{ matrix.node-ver }}
+        uses: actions/setup-node@v2.1.2
+        with:
+          node-version: ${{ matrix.node-ver }}
+      - name: install dependencies
+        run: npm ci
+      - name: lint
+        run: 'npm run lint ||:'
+      - name: use example config
+        run: |
+          mv ./config/config.json.example ./config/config.json
+      - name: run tests
+        run: npm test
