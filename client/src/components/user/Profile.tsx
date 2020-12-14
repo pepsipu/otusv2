@@ -36,6 +36,10 @@ export default () => {
     emailHash: '',
     badges: [],
     challenges: [],
+    ctf: {
+      rank: 0,
+      pp: 0,
+    },
   }) as [any, any];
 
   useEffect(() => {
@@ -151,6 +155,16 @@ export default () => {
                   ))}
                 </div>
               </div>
+              <div className="col" />
+              <div className="col-auto">
+                <h2 style={{
+                  color: '#818181',
+                }}
+                >
+                  #
+                  {ctf.rank}
+                </h2>
+              </div>
             </div>
           </div>
         </div>
@@ -197,7 +211,8 @@ interface ProfileData {
   badges: { backgroundColor: string, color: string, text: string, tooltip: string }[],
   ctf: {
     pp: number,
-    solves: { challenge: string, timestamp: Date, position: number }[]
+    solves: { challenge: string, timestamp: Date, position: number }[],
+    rank: number,
   },
   challenges: IChallenge[],
 }

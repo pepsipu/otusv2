@@ -23,4 +23,13 @@ const updateUser = (id: Types.ObjectId, pp: number) => {
 
 };
 
-export { loadLeaderboard, updateUser };
+// TODO: dont promisify zrank on the fly, but im lazy to add new types to the client
+const getRank = async (scoreboard: RedisClient, id: Types.ObjectId | string) => new Promise(
+  (resolve, reject) => scoreboard.zrank(
+    'scoreboard',
+    id.toString(),
+    (_, rank) => resolve(rank),
+  ),
+);
+
+export { loadLeaderboard, updateUser, getRank };
