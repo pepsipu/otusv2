@@ -1,3 +1,3 @@
-import createChallenge from './createChallenge';
+import create from './create';
 
-export default { routes: [...createChallenge.routes] };
+export default { routes: [...create.routes] };

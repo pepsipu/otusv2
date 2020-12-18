@@ -32,4 +32,8 @@ const getRank = async (scoreboard: RedisClient, id: Types.ObjectId | string) => 
   ),
 );
 
-export { loadLeaderboard, updateUser, getRank };
+const getRanksIndex = async (scoreboard: RedisClient) => {};
+
+export {
+  loadLeaderboard, updateUser, getRank, getRanksIndex,
+};

@@ -1,6 +1,6 @@
 import express from 'express';
 import { createRaiseError } from '../util';
-import { createChallenge, createChallengeSchema } from '../../schema/challenge/createChallenge';
+import { createChallenge, createChallengeSchema } from '../../schema/challenge/create';
 import validRecaptcha from '../../api/recaptcha';
 import { User } from '../../schema/user';
 

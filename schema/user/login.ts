@@ -4,14 +4,8 @@ import { IUser } from './index';
 const passwordComplexity = require('joi-password-complexity');
 
 const loginSchema = joi.object({
-  password: passwordComplexity({
-    min: 7,
-    max: 40,
-    lowerCase: 1,
-    upperCase: 0,
-    numeric: 1,
-    symbol: 0,
-  }).required(),
+  password: joi.string()
+    .required(),
   email: joi.string()
     .email()
     .trim()

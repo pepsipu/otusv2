@@ -23,11 +23,7 @@ export default {
       const {
         username, emailHash, country, badges, ctf,
       } = user;
-      const challenges = (await Challenge.find({ author: user.id })).map(({
-        name, categories, description, points,
-      }) => ({
-        name, categories, description, points,
-      }));
+      const challenges = (await Challenge.find({ author: user.id }, 'name categories description points'));
       res.send({
         username,
         emailHash,
