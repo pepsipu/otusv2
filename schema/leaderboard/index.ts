@@ -25,15 +25,19 @@ const updateUser = (id: Types.ObjectId, pp: number) => {
 
 // TODO: dont promisify zrank on the fly, but im lazy to add new types to the client
 const getRank = async (scoreboard: RedisClient, id: Types.ObjectId | string) => new Promise(
-  (resolve, reject) => scoreboard.zrank(
+  (resolve) => scoreboard.zrank(
     'scoreboard',
     id.toString(),
     (_, rank) => resolve(rank),
   ),
 );
 
-const getRanksIndex = async (scoreboard: RedisClient) => {};
+const rankRange = async (scoreboard: RedisClient, start: number, stop: number) => new Promise(
+  (resolve) => {
+    scoreboard.zrange('scoreboard', start, stop, (_, users) => resolve(users));
+  },
+);
 
 export {
-  loadLeaderboard, updateUser, getRank, getRanksIndex,
+  loadLeaderboard, updateUser, getRank, rankRange,
 };
