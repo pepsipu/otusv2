@@ -37,7 +37,7 @@ export default () => {
     badges: [],
     challenges: [],
     ctf: {
-      rank: 0,
+      rank: 'err',
       pp: 0,
     },
   }) as [any, any];
@@ -162,7 +162,7 @@ export default () => {
                 }}
                 >
                   #
-                  {ctf.rank}
+                  {ctf.rank + 1}
                 </h2>
               </div>
             </div>

@@ -29,7 +29,7 @@ export default {
         emailHash,
         country,
         badges,
-        ctf: { ...ctf, rank: await getRank(req.app.locals.redis.scoreboard, userId) || 'error fetching rank' },
+        ctf: { ...ctf, rank: await getRank(req.app.locals.redis.scoreboard, userId) },
         challenges,
         error: false,
       });

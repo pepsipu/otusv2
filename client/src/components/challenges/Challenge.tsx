@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
+import { motion } from 'framer-motion';
 
 const Challenge = ({
   name, description, categories, points,
@@ -49,15 +50,21 @@ const Challenge = ({
       <div
         className="input-group-prepend"
       >
-        <button
+        <motion.button
           style={{
             borderRadius: '0',
+            borderTopRightRadius: '10px',
+            borderBottomRightRadius: '10px',
             margin: '0',
+            color: '#f1f2eb',
+            backgroundColor: '#1f1f1f',
           }}
           type="button"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
         >
           submit
-        </button>
+        </motion.button>
       </div>
     </div>
     {categories.map((category) => (
