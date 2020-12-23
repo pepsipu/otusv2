@@ -31,6 +31,9 @@ const User = mongoose.model('User', userSchema);
 
 const getUsers = async (filter) => User.find(filter);
 const getUser = async (username) => User.findOne({ username });
+
+const userCount = async () => User.countDocuments({});
+
 const giveBadge = async (username, badge) => User.findOneAndUpdate({ username }, {
   $push: {
     badges: badge,
@@ -60,5 +63,5 @@ const badges = {
 };
 
 module.exports = {
-  User, getUsers, getUser, giveBadge, clearBadges, badges,
+  User, userCount, getUsers, getUser, giveBadge, clearBadges, badges,
 };
