@@ -190,7 +190,13 @@ export default () => {
                 marginBottom: '20px',
               }}
             >
-              <Challenge {...challenge} />
+              <Challenge
+                {...challenge}
+                author={{
+                  username,
+                  _id: userId,
+                }}
+              />
             </div>
           ))}
         </div>

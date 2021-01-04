@@ -1,19 +1,23 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './Challenges.css';
 import { NavLink } from 'react-router-dom';
 import Check from '../ui/Check';
+import { getWithErrors } from '../../util/requests';
+import { Challenge, IChallenge } from './Challenge';
 
-// const getChallenges = async (): Promise<null> => {
-//
-// };
+// const getChallenges = async (): Promise<null> => ;
 
 export default () => {
   // we can make these modular but im pretty lazy so for now keep as separate
   const onlyRanked = useRef(null);
   const onlyUnranked = useRef(null);
+  const [challenges, setChallenges] = useState([]);
 
-  const isPwn = useRef(null);
-  const isCrypto = useRef(null);
+  useEffect(() => {
+    getWithErrors('/challenge/get').then(({ challenges: fetchedChallenges }) => setChallenges(fetchedChallenges));
+  }, [setChallenges]);
+
+  console.log(challenges);
   return (
     <div className="centerField">
       <h1>challenges</h1>
@@ -60,8 +64,6 @@ export default () => {
           >
             categories
           </p>
-          <Check trueRef={isPwn}>pwn</Check>
-          <Check trueRef={isCrypto}>crypto</Check>
         </div>
         <div
           className="col"
@@ -72,9 +74,26 @@ export default () => {
             padding: '0',
           }}
         >
+          {challenges?.map((challenge: IChallenge) => (
+            <div
+              key={challenge.name}
+              className="componentContainerRound"
+              style={{
+                padding: '20px',
+                borderRadius: '3px',
+              }}
+            >
+              <Challenge
+                {...challenge}
+              />
+            </div>
+          )) || (
           <div
             className="componentContainer"
-          />
+          >
+            no challenges!
+          </div>
+          )}
         </div>
 
       </div>

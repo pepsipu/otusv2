@@ -1,22 +1,33 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 const Challenge = ({
-  name, description, categories, points,
+  name, description, categories, points, author,
 }: IChallenge) => (
   <>
     <div className="row">
       <div className="col">
-        <h6>{name}</h6>
+        <h6 style={{ margin: '0' }}>{name}</h6>
       </div>
       <div className="col-auto">
-        <p>
-          {points !== -1 && <p>{`${points} points`}</p>}
-        </p>
+        {points !== -1 && (
+          <p style={{ margin: '0' }}>
+            {`${points} points`}
+          </p>
+        )}
       </div>
     </div>
-    <small>pepsipu</small>
+    <Link
+      to={`/profile/${author._id}/ctf`}
+      style={{
+        fontSize: '13px',
+        padding: '0',
+      }}
+    >
+      {author.username}
+    </Link>
     <hr style={{
       marginTop: '10px',
       marginBottom: '10px',
@@ -69,6 +80,7 @@ const Challenge = ({
     </div>
     {categories.map((category) => (
       <small
+        key={category}
         style={{
           background: '#1f1f1f',
           color: '#f1f2eb',
@@ -87,6 +99,11 @@ export interface IChallenge {
   description: string,
   categories: string[],
   points: number,
+  author: {
+    username: string,
+    _id: string,
+  }
+  _id: string,
 }
 
 export { Challenge };

@@ -5,3 +5,4 @@ parserOptions:
 rules:
   max-len: off
   react/jsx-props-no-spreading: off
+  no-underscore-dangle: off
