@@ -40,7 +40,7 @@ const run = async () => {
   console.log(`[ Total Challenges ]: ${(await challenge.challengeCount()).toString().cyan}`.bold);
   console.log(`[ Ranked Challenges ]: ${(await challenge.rankedCount()).toString().yellow}`.bold);
   const adminConsole = repl.start('otus console> ');
-  adminConsole.context.user = user;
+  Object.assign(adminConsole.context, { user, challenge });
 };
 
 run().then(() => {});
