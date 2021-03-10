@@ -3,7 +3,6 @@ import mongoose from 'mongoose';
 import { User } from '../../schema/user';
 import { createRaiseError } from '../util';
 import { Challenge } from '../../schema/challenge';
-import { getRank } from '../../schema/leaderboard';
 
 export default {
   routes: [(router: express.Router) => {
@@ -29,7 +28,7 @@ export default {
         emailHash,
         country,
         badges,
-        ctf: { ...ctf, rank: await getRank(req.app.locals.redis.scoreboard, userId) },
+        ctf: { ...ctf, rank: await req.app.locals.redis.scoreboard.getRank(userId) },
         challenges,
         error: false,
       });

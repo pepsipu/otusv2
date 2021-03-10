@@ -8,36 +8,44 @@ import redis, { RedisClient } from 'redis';
 import { Types } from 'mongoose';
 import { IUser, User } from '../user';
 
-const loadLeaderboard = async (scoreboard: RedisClient) => {
-  /* this isn't good. mapping the array takes O(n) time, so if there was a way during mongos
-  fetch that would be better, but i don't know it */
-  const users = await User.find({}, 'ctf.pp');
-  if (users.length) {
-    scoreboard.zadd('scoreboard', ...users.map(
-      ({ ctf: { pp }, _id: id }: IUser) => [pp, id.toString()] as any,
-    ));
+export default class RedisScoreboard {
+  private scoreboard: RedisClient;
+
+  constructor(scoreboard: RedisClient) {
+    this.scoreboard = scoreboard;
+    this.loadLeaderboard();
   }
-};
 
-const updateUser = (id: Types.ObjectId, pp: number) => {
+  async loadLeaderboard() {
+    /* this isn't good. mapping the array takes O(n) time, so if there was a way during mongos
+    fetch that would be better, but i don't know it */
+    const users = await User.find({}, 'ctf.pp');
+    if (users.length) {
+      this.scoreboard.zadd('scoreboard', ...users.map(
+        ({ ctf: { pp }, _id: id }: IUser) => [pp, id.toString()] as any,
+      ));
+    }
+  }
 
-};
+  async getRank(id: Types.ObjectId | string) {
+    return new Promise(
+      (resolve) => this.scoreboard.zrank(
+        'scoreboard',
+        id.toString(),
+        (_, rank) => resolve(rank),
+      ),
+    );
+  }
 
-// TODO: dont promisify zrank on the fly, but im lazy to add new types to the client
-const getRank = async (scoreboard: RedisClient, id: Types.ObjectId | string) => new Promise(
-  (resolve) => scoreboard.zrank(
-    'scoreboard',
-    id.toString(),
-    (_, rank) => resolve(rank),
-  ),
-);
+  async getRankRange(start: number, stop: number) {
+    return new Promise(
+      (resolve) => {
+        this.scoreboard.zrange('scoreboard', start, stop, (_, users) => resolve(users));
+      },
+    );
+  }
 
-const rankRange = async (scoreboard: RedisClient, start: number, stop: number) => new Promise(
-  (resolve) => {
-    scoreboard.zrange('scoreboard', start, stop, (_, users) => resolve(users));
-  },
-);
-
-export {
-  loadLeaderboard, updateUser, getRank, rankRange,
-};
+  close() {
+    this.scoreboard.quit();
+  }
+}

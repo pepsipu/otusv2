@@ -10,7 +10,7 @@ import redis from 'redis';
 import { origin } from './config/config.json';
 import { expressLogger, logger } from './config/winston';
 import router from './routes/router';
-import { loadLeaderboard } from './schema/leaderboard';
+import RedisScoreboard from './schema/leaderboard';
 
 export default async (mongoUri: string, sessionSecret: string): Promise<express.Application> => {
   const app: express.Application = express();
@@ -30,11 +30,10 @@ export default async (mongoUri: string, sessionSecret: string): Promise<express.
   });
 
   app.locals.redis = {
-    scoreboard: redis.createClient(),
-    disconnect: () => app.locals.redis.scoreboard.quit(),
+    scoreboard: new RedisScoreboard(redis.createClient()),
+    // keep a level of indirection for other redis clients
+    disconnect: () => app.locals.redis.scoreboard.close(),
   };
-
-  await loadLeaderboard(app.locals.redis.scoreboard);
 
   app.use(session({
     secret: sessionSecret,

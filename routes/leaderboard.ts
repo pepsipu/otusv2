@@ -1,5 +1,4 @@
 import express from 'express';
-import { rankRange } from '../schema/leaderboard';
 import { User } from '../schema/user';
 
 const ENTRIES_PER_PAGE = 20;
@@ -11,8 +10,8 @@ export default {
       const { scoreboard } = req.app.locals.redis;
       const users = await User.find({
         _id: {
-          $in: await rankRange(
-            scoreboard, page * ENTRIES_PER_PAGE, (page + 1) * ENTRIES_PER_PAGE,
+          $in: await scoreboard.getRankRange(
+            page * ENTRIES_PER_PAGE, (page + 1) * ENTRIES_PER_PAGE,
           ),
         },
       }, 'username country');

@@ -33,6 +33,7 @@ const getUsers = async (filter) => User.find(filter);
 const getUser = async (username) => User.findOne({ username });
 
 const userCount = async () => User.countDocuments({});
+const deleteUser = async (username) => User.findOneAndDelete({ username });
 
 const giveBadge = async (username, badge) => User.findOneAndUpdate({ username }, {
   $push: {
@@ -63,5 +64,5 @@ const badges = {
 };
 
 module.exports = {
-  User, userCount, getUsers, getUser, giveBadge, clearBadges, badges,
+  User, userCount, getUsers, getUser, giveBadge, clearBadges, deleteUser, badges,
 };
