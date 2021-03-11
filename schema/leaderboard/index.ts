@@ -16,15 +16,16 @@ export default class RedisScoreboard {
     this.loadLeaderboard();
   }
 
-  async loadLeaderboard() {
+  loadLeaderboard() {
     /* this isn't good. mapping the array takes O(n) time, so if there was a way during mongos
     fetch that would be better, but i don't know it */
-    const users = await User.find({}, 'ctf.pp');
-    if (users.length) {
-      this.scoreboard.zadd('scoreboard', ...users.map(
-        ({ ctf: { pp }, _id: id }: IUser) => [pp, id.toString()] as any,
-      ));
-    }
+    User.find({}, 'ctf.pp').then(((users) => {
+      if (users.length) {
+        this.scoreboard.zadd('scoreboard', ...users.map(
+          ({ ctf: { pp }, _id: id }: IUser) => [pp, id.toString()] as any,
+        ));
+      }
+    }));
   }
 
   async getRank(id: Types.ObjectId | string) {
