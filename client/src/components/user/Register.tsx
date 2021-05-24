@@ -1,11 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import ReCAPTCHA from 'react-google-recaptcha';
 import { toast } from 'react-toastify';
-import axios from 'axios';
 import countries from 'i18n-iso-countries';
-import { recaptcha, ipInfoToken } from '../../config.json';
+import { recaptcha } from '../../config.json';
 import { postWithErrors } from '../../util/requests';
 
 countries.registerLocale(require('i18n-iso-countries/langs/en.json'));

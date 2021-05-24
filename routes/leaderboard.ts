@@ -10,9 +10,9 @@ export default {
       const { scoreboard } = req.app.locals.redis;
       const users = await User.find({
         _id: {
-          $in: await scoreboard.getRankRange(
+          $in: (await scoreboard.getRankRange(
             page * ENTRIES_PER_PAGE, (page + 1) * ENTRIES_PER_PAGE,
-          ),
+          )),
         },
       }, 'username country');
       res.send({ users });

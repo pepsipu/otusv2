@@ -1,10 +1,8 @@
 /* things to implement:
-* TODO loadLeaderboard():
-*   load the leaderboard into the redis sortedset. we'd need to load every user and their pp
 * TODO updateUser(user_id, new_pp):
 *   user changes pp and scoreboard needs to be updated with new ranks */
 
-import redis, { RedisClient } from 'redis';
+import { RedisClient } from 'redis';
 import { Types } from 'mongoose';
 import { IUser, User } from '../user';
 
@@ -21,11 +19,15 @@ export default class RedisScoreboard {
     fetch that would be better, but i don't know it */
     User.find({}, 'ctf.pp').then(((users) => {
       if (users.length) {
-        this.scoreboard.zadd('scoreboard', ...users.map(
-          ({ ctf: { pp }, _id: id }: IUser) => [pp, id.toString()] as any,
-        ));
+        users.forEach(({ ctf: { pp }, _id: id }: IUser) => {
+          this.scoreboard.zadd('scoreboard', pp, id.toString());
+        });
       }
     }));
+  }
+
+  async addUser(id: Types.ObjectId | string) {
+    this.scoreboard.zadd('scoreboard', 0, id.toString());
   }
 
   async getRank(id: Types.ObjectId | string) {

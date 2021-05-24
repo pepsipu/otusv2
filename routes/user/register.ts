@@ -8,6 +8,7 @@ import { login } from '../../schema/user/login';
 export default {
   routes: [(router: express.Router) => {
     router.post('/user/register', async (req, res) => {
+      const { redis } = req.app.locals;
       const raiseError = createRaiseError(res);
       const { value, error } = registerSchema.validate(req.body);
       if (error) {
@@ -26,6 +27,7 @@ export default {
         raiseError('duplicate email or username', 403);
         return;
       }
+      await redis.scoreboard.addUser(user.id);
       if (!login(req, res, user)) {
         raiseError('server could not make a session, please report', 500);
       }

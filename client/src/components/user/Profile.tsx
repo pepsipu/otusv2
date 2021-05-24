@@ -5,6 +5,7 @@ import countries from 'i18n-iso-countries';
 import ReactTooltip from 'react-tooltip';
 import { getWithErrors } from '../../util/requests';
 import { IChallenge, Challenge } from '../challenges/Challenge';
+import Flag from '../ui/Flag';
 
 const categories = {
   ctf: {
@@ -122,15 +123,7 @@ export default () => {
                       paddingBottom: '0px',
                     }}
                   >
-                    {/* thank you peppy you are so cute */}
-                    <img
-                      style={{
-                        paddingRight: '8px',
-                      }}
-                      width="40px"
-                      alt="osu flag"
-                      src={`https://osu.ppy.sh/images/flags/${country.toUpperCase()}.png`}
-                    />
+                    <Flag country={country} />
                     <small>{alternateCountries(country)}</small>
                   </div>
                 </div>

@@ -17,7 +17,6 @@ export default () => {
     getWithErrors('/challenge/get').then(({ challenges: fetchedChallenges }) => setChallenges(fetchedChallenges));
   }, [setChallenges]);
 
-  console.log(challenges);
   return (
     <div className="centerField">
       <h1>challenges</h1>

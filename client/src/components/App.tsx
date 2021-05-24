@@ -12,7 +12,7 @@ import Logout from './user/Logout';
 import Login from './user/Login';
 import Challenges from './challenges/Challenges';
 import MakeChallenge from './challenges/MakeChallenge';
-import Leaderboard from './Leaderboard';
+import Rankings from './Rankings';
 
 enum UserType {
   AnonUser,
@@ -79,7 +79,7 @@ const paths = [
   {
     name: 'rankings',
     path: '/rankings',
-    component: Leaderboard,
+    component: Rankings,
     nav: () => true,
     route: () => true,
     user: false,
