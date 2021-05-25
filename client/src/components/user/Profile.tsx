@@ -124,7 +124,13 @@ export default () => {
                     }}
                   >
                     <Flag country={country} />
-                    <small>{alternateCountries(country)}</small>
+                    <small style={{
+                      paddingTop: '4px',
+                      paddingLeft: '8px',
+                    }}
+                    >
+                      {alternateCountries(country)}
+                    </small>
                   </div>
                 </div>
                 <div>

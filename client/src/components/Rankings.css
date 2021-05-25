@@ -1,0 +1,9 @@
+.ranking {
+    margin: 7px;
+    background: #373737;
+    display: flex;
+}
+
+.ranking > * {
+    margin: 6px;
+}

@@ -27,10 +27,10 @@ export default {
         raiseError('duplicate email or username', 403);
         return;
       }
-      await redis.scoreboard.addUser(user.id);
       if (!login(req, res, user)) {
         raiseError('server could not make a session, please report', 500);
       }
+      await redis.scoreboard.addUser(user.id);
     });
   }],
 };

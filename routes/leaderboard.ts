@@ -14,7 +14,7 @@ export default {
             page * ENTRIES_PER_PAGE, (page + 1) * ENTRIES_PER_PAGE,
           )),
         },
-      }, 'username country');
+      }, 'username country ctf.pp');
       res.send({ users });
       res.end();
     });

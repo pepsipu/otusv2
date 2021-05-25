@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getWithErrors } from '../util/requests';
 import Flag from './ui/Flag';
+import './Rankings.css';
 
 export default () => {
   const [rankings, setRankings] = useState([]);
@@ -27,28 +28,29 @@ export default () => {
         >
           {rankings.map((user, index) => (
             <div
-              className="componentContainer"
-              style={{
-                padding: '9px',
-                margin: '7px',
-                background: '#373737',
-              }}
+              className="componentContainer ranking"
             >
               <b>
                 #
                 {index + 1}
-                {' '}
               </b>
               <Flag country={user.country} />
               <Link
                 to={`/profile/${user._id}/ctf`}
                 style={{
                   fontSize: '15px',
-                  padding: '0',
                 }}
               >
                 {user.username}
               </Link>
+              <div style={{
+                textAlign: 'right',
+                flexGrow: 100,
+              }}
+              >
+                {user.ctf.pp}
+                pp
+              </div>
             </div>
           ))}
         </div>
