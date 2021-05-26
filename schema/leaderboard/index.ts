@@ -30,6 +30,10 @@ export default class RedisScoreboard {
     this.scoreboard.zadd('scoreboard', 0, id.toString());
   }
 
+  async updateUser(id: Types.ObjectId | string, gained: number) {
+    this.scoreboard.zincrby('scoreboard', gained, id.toString());
+  }
+
   async getRank(id: Types.ObjectId | string) {
     return new Promise(
       (resolve) => this.scoreboard.zrank(

@@ -6,11 +6,11 @@ import { toast } from 'react-toastify';
 import { postWithErrors } from '../../util/requests';
 
 const submitChallenge = async (_id: string, flag: string) => {
-  const { ok } = await postWithErrors(`/challenge/submit/${_id}`, { flag });
+  const { ok, reason } = await postWithErrors(`/challenge/submit/${_id}`, { flag });
   if (ok) {
     toast.success('correct!');
   } else {
-    toast.error('incorrect!');
+    toast.error(reason);
   }
 };
 

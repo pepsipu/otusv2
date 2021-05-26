@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const user = require('./User');
 
 const UNRANKED = -1;
 
@@ -20,9 +21,29 @@ const Challenge = mongoose.model('Challenge', challengeSchema);
 const challengeCount = async () => Challenge.countDocuments({});
 const rankedCount = async () => Challenge.countDocuments({ points: { $ne: -1 } });
 const getChallenges = async () => Challenge.find();
-const deleteChallenge = async (id) => Challenge.deleteOne({ _id: id });
-const setPoints = async (id, points) => Challenge.findOneAndUpdate({ _id: id }, { points });
+const deleteChallenge = async (id) => Challenge.findByIdAndDelete(id);
+const setPoints = async (id, points) => Challenge.findByIdAndUpdate(id, { points });
 const getChallenge = async (name) => Challenge.find({ name });
+const revokeSolve = async (id, username) => {
+  const { id: userId } = await user.getUser(username);
+  const { points } = await Challenge.findByIdAndUpdate(id, {
+    $pull: {
+      solves: {
+        playerId: userId,
+      },
+    },
+  });
+  await user.User.findByIdAndUpdate(userId, {
+    $pull: {
+      'ctf.solves': {
+        challenge: id,
+      },
+    },
+    $inc: {
+      'ctf.pp': -points,
+    },
+  });
+};
 
 module.exports = {
   Challenge,
@@ -33,4 +54,5 @@ module.exports = {
   deleteChallenge,
   setPoints,
   getChallenge,
+  revokeSolve,
 };

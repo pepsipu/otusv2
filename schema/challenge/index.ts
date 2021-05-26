@@ -6,10 +6,7 @@ const challengeSchema = new mongoose.Schema({
   flag: String,
   categories: [String],
   description: String,
-  solves: [{
-    playerId: mongoose.Types.ObjectId,
-    timestamp: Date,
-  }],
+  solves: [mongoose.Types.ObjectId],
   points: Number,
 });
 
