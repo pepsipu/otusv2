@@ -26,23 +26,23 @@ const setPoints = async (id, points) => Challenge.findByIdAndUpdate(id, { points
 const getChallenge = async (name) => Challenge.find({ name });
 const revokeSolve = async (id, username) => {
   const { id: userId } = await user.getUser(username);
-  const { points } = await Challenge.findByIdAndUpdate(id, {
+  await Challenge.findByIdAndUpdate(id, {
     $pull: {
       solves: {
         playerId: userId,
       },
     },
   });
-  await user.User.findByIdAndUpdate(userId, {
-    $pull: {
-      'ctf.solves': {
-        challenge: id,
-      },
-    },
-    $inc: {
-      'ctf.pp': -points,
-    },
-  });
+  // await user.User.findByIdAndUpdate(userId, {
+  //   $pull: {
+  //     'ctf.solves': {
+  //       challenge: id,
+  //     },
+  //   },
+  //   $inc: {
+  //     'ctf.pp': -points,
+  //   },
+  // });
 };
 
 module.exports = {

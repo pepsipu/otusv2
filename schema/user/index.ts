@@ -25,7 +25,8 @@ const userSchema = new mongoose.Schema({
       challenge: mongoose.Types.ObjectId,
       timestamp: Date,
       // rank when this challenge was solved, useful for generating rank vs time graph
-      position: Number,
+      rank: Number,
+      ppGained: Number,
     }],
   },
 });
@@ -39,7 +40,12 @@ export interface IUser extends Document {
   badges: { backgroundColor: string, color: string, text: string, tooltip: string }[],
   ctf: {
     pp: number,
-    solves: { challenge: mongoose.Types.ObjectId, timestamp: Date, position: number }[]
+    solves: {
+      challenge: mongoose.Types.ObjectId,
+      timestamp: Date,
+      rank: number,
+      ppGained: number
+    }[]
   }
 }
 

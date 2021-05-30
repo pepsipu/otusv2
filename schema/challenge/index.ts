@@ -16,10 +16,7 @@ interface IChallenge extends Document {
   flag: string,
   categories: string[],
   description: string,
-  solves: {
-    playerId: mongoose.Types.ObjectId,
-    timestamp: Date,
-  }[],
+  solves: mongoose.Types.ObjectId[],
   points: number,
 }
 

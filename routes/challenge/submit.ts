@@ -36,7 +36,6 @@ export default {
         return;
       }
       const { redis } = req.app.locals;
-
       await Challenge.findByIdAndUpdate(challengeId, {
         $push: {
           solves: userId,
@@ -44,19 +43,20 @@ export default {
       });
 
       const pointsGained = challenge.points === -1 ? 0 : challenge.points;
+      await redis.scoreboard.updateUser(userId, pointsGained);
       await User.findByIdAndUpdate(userId, {
         $push: {
           'ctf.solves': {
             challenge: challengeId,
             timestamp: new Date(),
             rank: redis.scoreboard.getRank(userId),
+            ppGained: pointsGained,
           },
         },
         $inc: {
           'ctf.pp': pointsGained,
         },
       });
-      await redis.scoreboard.updateUser(userId, pointsGained);
       res.send({ ok: true });
     });
   }],
